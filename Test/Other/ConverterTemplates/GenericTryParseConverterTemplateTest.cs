@@ -1,0 +1,102 @@
+﻿/*
+   SharpTextFSM
+   Copyright (C) 2024 Michael Crino
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+using Bitvantage.SharpTextFSM;
+using Bitvantage.SharpTextFSM.Attributes;
+using Bitvantage.SharpTextFSM.TypeConverters;
+
+namespace Test.Other.ConverterTemplates
+{
+    internal class GenericTryParseConverterTemplateTest : ITemplate
+    {
+
+        string ITemplate.TextFsmTemplate => """
+            Value NUMBER (\d+)
+            Value NULLABLE_NUMBER (\d+)
+            Value NULLABLE_NUMBER_THAT_IS_NULL (.+)
+            Value LONG (\d+)
+            Value NULLABLE_LONG (\d+)
+            Value NULLABLE_LONG_THAT_IS_NULL (.+)
+            Value STRING (.+)
+            Value NULLABLE_STRING (.+)
+
+            Start
+             ^NUMBER: ${NUMBER}
+             ^NULLABLE_NUMBER: ${NULLABLE_NUMBER}
+             ^NULLABLE_NUMBER_THAT_IS_NULL: ${NULLABLE_NUMBER_THAT_IS_NULL}
+             ^LONG: ${LONG}
+             ^NULLABLE_LONG: ${NULLABLE_LONG}
+             ^NULLABLE_LONG_THAT_IS_NULL: ${NULLABLE_LONG_THAT_IS_NULL}
+             ^$
+             ^. -> Error
+            """;
+
+        private readonly string _data = """
+            NUMBER: 10
+            NULLABLE_NUMBER: 20
+            NULLABLE_NUMBER_THAT_IS_NULL: dog
+            
+            LONG: 10
+            NULLABLE_LONG: 20
+            NULLABLE_LONG_THAT_IS_NULL: dog
+            
+            NULLABLE_LONG: 20
+            NULLABLE_LONG_THAT_IS_NULL: dog
+            """;
+
+        [TemplateVariable(Name = "NUMBER", Converter = typeof(GenericTryParseConverter<int>))]
+        public int Number { get; set; }
+
+        [TemplateVariable(Name = "NULLABLE_NUMBER", Converter = typeof(GenericTryParseConverter<int?>))]
+        public int? NullableNumber { get; set; }
+
+        [TemplateVariable(Name = "NULLABLE_NUMBER_THAT_IS_NULL", Converter = typeof(GenericTryParseConverter<int?>), ThrowOnConversionFailure = false)]
+        public int? NullableNumberThatIsNull { get; set; }
+
+        [TemplateVariable(Name = "LONG", Converter = typeof(GenericTryParseConverter<long>))]
+        public long LONG { get; set; }
+
+        [TemplateVariable(Name = "NULLABLE_LONG", Converter = typeof(GenericTryParseConverter<long?>))]
+        public long? NullableLONG { get; set; }
+
+        [TemplateVariable(Name = "NULLABLE_LONG_THAT_IS_NULL", Converter = typeof(GenericTryParseConverter<long?>), ThrowOnConversionFailure = false)]
+        public long? NullableLONGThatIsNull { get; set; }
+
+        [Test(Description = "Unpopulated lists are empty and not null")]
+        public void RawTest01()
+        {
+            var genericTemplate = Template.FromType<GenericTryParseConverterTemplateTest>();
+
+            var genericResult = genericTemplate.Parse<GenericTryParseConverterTemplateTest>(_data);
+
+            Assert.That(genericResult.Count, Is.EqualTo(1));
+
+            var result = genericResult.Single();
+
+            Assert.That(result.LONG, Is.EqualTo(10));
+            Assert.That(result.NullableLONG, Is.EqualTo(20));
+            Assert.That(result.NullableLONGThatIsNull, Is.Null);
+
+            Assert.That(result.Number, Is.EqualTo(10));
+            Assert.That(result.NullableNumber, Is.EqualTo(20));
+            Assert.That(result.NullableNumberThatIsNull, Is.Null);
+
+
+        }
+    }
+}

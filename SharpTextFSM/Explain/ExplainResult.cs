@@ -1,0 +1,53 @@
+﻿/*
+   SharpTextFSM
+   Copyright (C) 2024 Michael Crino
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+using Bitvantage.SharpTextFSM.TemplateHelpers;
+
+namespace Bitvantage.SharpTextFSM.Explain
+{
+    public class ExplainResult : List<ExplainEvent>
+    {
+        public string? Error { get; set; }
+        public RowCollection RowCollection { get; internal set; }
+
+        public override string ToString()
+        {
+            throw new InvalidOperationException();
+        }
+
+        public void ToJson()
+        {
+
+        }
+
+        public void ToXml()
+        {
+
+        }
+
+        // TODO: include runtime
+        // TODO: include runtime by rule
+
+    }
+
+    public class ExplainResult<T> : ExplainResult
+    {
+        public List<T> Results { get; set; }
+
+    }
+}
