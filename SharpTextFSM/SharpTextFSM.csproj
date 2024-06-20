@@ -14,7 +14,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>cli;parser;parsing;state-machine;regexp;textfsm</PackageTags>
+    <PackageTags>cli;parser;parsing;state-machine;regex;textfsm</PackageTags>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
 	<VersionPrefix>1.0.0</VersionPrefix>
 	<FileVersion>1.0.0</FileVersion>
