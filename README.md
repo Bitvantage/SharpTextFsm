@@ -8,14 +8,13 @@ PM> NuGet\Install-Package Bitvantage.SharpTextFSM
 ```
 
 ## TextFSM Resources
-This documentation is focused on details that are specific to SharpTextFSM, for general information on TextFSM templates and regular expressions the following resources may be helpful:
+This documentation is focused on details that are specific to SharpTextFSM, for general information on TextFSM templates or regular expressions the following resources may be helpful:
 * [Google TextFSM Wiki](https://github.com/google/textfsm/wiki/TextFSM)
 * [Getting Started with TextFSM for Python](https://pyneng.readthedocs.io/en/latest/book/21_textfsm/README.html)
 * [Awesome Regex Resources](https://github.com/Varunram/Awesome-Regex-Resources)
-* [Network to Code Text FSM Templates](https://github.com/networktocode/ntc-templates) An extensive library of templates for many vendors' equipment that can be used directly by SharpTextFSM.
-
-The templates are also available pre-packaged in the Bitvantage.ShartTextFSM.NtcTemplates project and include the template along with a pre-generated record object.
-
+* [Network to Code Text FSM Templates](https://github.com/networktocode/ntc-templates)
+  \
+  An extensive library of templates for many vendors' equipment that can be used directly by SharpTextFSM.
 
 ## Quick Start
 A simple example of how to parse the output from the 'show ip arp' command from a Cisco IOS switch into a C# record.
