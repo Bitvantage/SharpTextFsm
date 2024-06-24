@@ -141,14 +141,15 @@ public long MagicNumber { get; set; }
 public long Answer { get; set; }
 ```
 ### Built-In Type Converters
-| Name                      | Description                                        |
-| ----                      | -----------                                         |
-| AnyValueAsFalseConverter  | Converts non-empty values to false                  |
-| AnyValueAsTrueConverter   | Converts non-empty values to true                   |
-| EnumConverter             | Automatically used for enum types                   |
-| GenericParseConverter     | Automatically used for types with a Parse method    |
-| GenericTryParseConverter  | Automatically used for types with a TryParse method |
-| StringConverter           | Automatically used for string types                 |
+| Name                      | Description                                                                                      |
+| ----                      | -----------                                                                                      |
+| AnyValueAsFalseConverter  | Converts non-empty values to false                                                               |
+| AnyValueAsTrueConverter   | Converts non-empty values to true                                                                |
+| EnumConverter             | Automatically used for enum types                                                                |
+| GenericParseConverter     | Automatically used for types with a Parse                                                        |
+| GenericTryParseConverter  | Automatically used for types with a TryParse method                                              |
+| StringConverter           | Automatically used for string types                                                              |
+| TerseTimeSpanConverter    | Converts timespans in the format of 1y2w3h4m5s or 1 year, 2 weeks, 3 hours, 4 minutes, 5 seconds | 
 
 ### Enum Conversion
 By default, enums are automatically parsed using the built-in type converter EnumConverter. Member values are matched in a case-insensitive way, and aliases can be attached by using the EnumAliasAttribute.

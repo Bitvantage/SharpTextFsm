@@ -1,0 +1,54 @@
+﻿using Bitvantage.SharpTextFSM.TypeConverters;
+
+namespace Test.Generic.Converters
+{
+    internal class TerseTimeSpanConverterTest
+    {
+        [Test]
+        public void Test01()
+        {
+            var success = new TerseTimeSpanConverter().TryConvert("3w1d5h", out var value);
+
+            Assert.That(success, Is.True);
+
+            Assert.That(value.ToString(), Is.EqualTo("22.05:00:00"));
+        }
+
+
+        [Test]
+        public void Test02()
+        {
+            var success = new TerseTimeSpanConverter().TryConvert("99y51w6d23h59m59s", out var value);
+
+            Assert.That(success, Is.True);
+
+            Assert.That(value.ToString(), Is.EqualTo("36498.23:59:59"));
+        }
+
+        [Test]
+        public void Test03()
+        {
+            var success = new TerseTimeSpanConverter().TryConvert("51w6d23h59m59s", out var value);
+
+            Assert.That(success, Is.True);
+
+            Assert.That(value.ToString(), Is.EqualTo("363.23:59:59"));
+        }
+
+        [Test(Description = "Non sequential units")]
+        public void Test04()
+        {
+            var success = new TerseTimeSpanConverter().TryConvert("1y3w10s", out var value);
+
+            Assert.That(success, Is.False);
+        }
+
+        [Test(Description = "Non sequential units")]
+        public void Test05()
+        {
+            var success = new TerseTimeSpanConverter().TryConvert("3w10s", out var value);
+
+            Assert.That(success, Is.False);
+        }
+    }
+}
