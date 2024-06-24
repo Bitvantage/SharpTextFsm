@@ -69,7 +69,7 @@ namespace Bitvantage.SharpTextFSM.TemplateHelpers
         [TemplateVariable(Name = "RULE_RECORD_ACTION", ThrowOnConversionFailure = false)]
         public RecordAction? RecordAction { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_ERROR", Converter = typeof(AnyValueAsTrue))]
+        [TemplateVariable(Name = "RULE_STATE_ERROR", Converter = typeof(AnyValueAsTrueConverter))]
         public bool ErrorState { get; set; }
 
         [TemplateVariable(Name = "RULE_STATE_ERROR_MESSAGE")]
@@ -81,7 +81,7 @@ namespace Bitvantage.SharpTextFSM.TemplateHelpers
         [TemplateVariable(Name = "RULE_STATE_FILTER")]
         public List<string> StateFilters { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_FILTER_INVERSION", Converter = typeof(AnyValueAsTrue))]
+        [TemplateVariable(Name = "RULE_STATE_FILTER_INVERSION", Converter = typeof(AnyValueAsTrueConverter))]
         public bool StateFilterInversion { get; set; }
 
         [TemplateVariable(Name = "RULE_STATE_NAME")]

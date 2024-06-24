@@ -143,8 +143,8 @@ public long Answer { get; set; }
 ### Built-In Type Converters
 | Name                      | Description                                        |
 | ----                      | -----------                                         |
-| AnyValueAsFalse           | Converts non-empty values to false                  |
-| AnyValueAsTrue            | Converts non-empty values to true                   |
+| AnyValueAsFalseConverter  | Converts non-empty values to false                  |
+| AnyValueAsTrueConverter   | Converts non-empty values to true                   |
 | EnumConverter             | Automatically used for enum types                   |
 | GenericParseConverter     | Automatically used for types with a Parse method    |
 | GenericTryParseConverter  | Automatically used for types with a TryParse method |

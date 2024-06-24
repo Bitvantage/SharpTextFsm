@@ -21,7 +21,7 @@ namespace Bitvantage.SharpTextFSM.TypeConverters
     /// <summary>
     /// Converts string.Empty to false, and every other value to true
     /// </summary>
-    public class AnyValueAsTrue : ValueConverter<bool>
+    public class AnyValueAsTrueConverter : ValueConverter<bool>
     {
         public override bool TryConvert(string value, out bool convertedValue)
         {
