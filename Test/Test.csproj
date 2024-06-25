@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharpTextFSM\SharpTextFSM.csproj" />
+    <ProjectReference Include="..\Bitvantage.SharpTextFSM\SharpTextFSM.csproj" />
   </ItemGroup>
 
 </Project>
