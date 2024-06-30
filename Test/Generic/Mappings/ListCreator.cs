@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Bitvantage.SharpTextFSM;
-using Bitvantage.SharpTextFSM.Attributes;
+using Bitvantage.SharpTextFsm;
+using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Generic.Mappings
 {
@@ -51,7 +51,7 @@ namespace Test.Generic.Mappings
             Assert.That(results[0].ValueProperty, Is.EqualTo("100,200,300,400"));
         }
 
-        class CommaSeparatedList : Bitvantage.SharpTextFSM.ListCreators.ListCreator<string,string>
+        class CommaSeparatedList : Bitvantage.SharpTextFsm.ListCreators.ListCreator<string,string>
         {
             public override string Create(string[] values)
             {

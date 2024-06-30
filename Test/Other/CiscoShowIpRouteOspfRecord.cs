@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 */
 
 using System.Net;
-using Bitvantage.SharpTextFSM.Attributes;
+using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Other
 {

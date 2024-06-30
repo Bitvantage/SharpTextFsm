@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Bitvantage.SharpTextFSM.TypeConverters;
+using Bitvantage.SharpTextFsm.TypeConverters;
 
 namespace Test.Generic.Converters
 {

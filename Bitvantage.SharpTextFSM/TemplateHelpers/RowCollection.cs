@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Text.RegularExpressions;
 
-namespace Bitvantage.SharpTextFSM.TemplateHelpers;
+namespace Bitvantage.SharpTextFsm.TemplateHelpers;
 
 public class RowCollection : IReadOnlyList<Row>
 {

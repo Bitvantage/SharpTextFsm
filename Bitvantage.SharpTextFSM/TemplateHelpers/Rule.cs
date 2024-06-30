@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,9 @@
 using System.Collections.Immutable;
 using System.Text;
 using System.Text.RegularExpressions;
-using Bitvantage.SharpTextFSM.Exceptions;
+using Bitvantage.SharpTextFsm.Exceptions;
 
-namespace Bitvantage.SharpTextFSM.TemplateHelpers;
+namespace Bitvantage.SharpTextFsm.TemplateHelpers;
 
 public enum LineAction
 {

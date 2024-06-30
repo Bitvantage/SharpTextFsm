@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,10 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Bitvantage.SharpTextFSM;
-using Bitvantage.SharpTextFSM.Definitions;
-using Bitvantage.SharpTextFSM.Exceptions;
-using Bitvantage.SharpTextFSM.TemplateHelpers;
+using Bitvantage.SharpTextFsm;
+using Bitvantage.SharpTextFsm.Definitions;
+using Bitvantage.SharpTextFsm.Exceptions;
+using Bitvantage.SharpTextFsm.TemplateHelpers;
 using Test.Helpers;
 
 namespace Test.Other

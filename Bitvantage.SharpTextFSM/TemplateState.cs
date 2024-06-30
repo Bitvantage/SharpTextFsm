@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,9 @@
 */
 
 using System.Collections.Immutable;
-using Bitvantage.SharpTextFSM.TemplateHelpers;
+using Bitvantage.SharpTextFsm.TemplateHelpers;
 
-namespace Bitvantage.SharpTextFSM
+namespace Bitvantage.SharpTextFsm
 {
     public class TemplateState
     {

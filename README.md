@@ -1,10 +1,10 @@
-# SharpTextFSM
-SharpTextFSM is a .NET implementation of the [Google TextFSM Python module](https://github.com/google/textfsm). TextFSM templates match semi-formated line delimited text using an articulated regular expression state machine.
+# Bitvantage.SharpTextFsm
+SharpTextFsm is a .NET implementation of the [Google TextFSM Python module](https://github.com/google/textfsm). TextFSM templates match semi-formated line delimited text using an articulated regular expression state machine.
 TextFSM templates are particularly well suited for parsing CLI output.
 
 ## Installing via NuGet Package Manager
 ```
-PM> NuGet\Install-Package Bitvantage.SharpTextFSM
+PM> NuGet\Install-Package Bitvantage.SharpTextFsm
 ```
 
 ## TextFSM Resources
@@ -340,11 +340,11 @@ Start
 ## Loop Free Continue Line Action with State Change
 The reference implementation of TextFSM does not allow combining the 'Continue' line action with a state transition to ensure a loop-free state machine. While this restriction is both reasonable and well intended, it complicates numerous common use cases and discourages using states to validate data.
 
-SharpTextFSM relaxes this restriction by allowing 'Continue' line actions with a state transition provided that doing so cannot produce a loop.
+SharpTextFsm relaxes this restriction by allowing 'Continue' line actions with a state transition provided that doing so cannot produce a loop.
 
 A state machine has a loop if it CAN indefinitely process the same line without advancing to the next line. In practice, this means there cannot be a state with a rule that includes a continue line action and a state transition that jumps to another state that can return to the previous state, either directly or indirectly, through rules that specify the continue line action.
 
-The following is an example of a valid SharpTextFSM template that uses both the Continue line action and a state change:
+The following is an example of a valid SharpTextFsm template that uses both the Continue line action and a state change:
 ```
 State1
  ^.* -> Continue State2
@@ -356,7 +356,7 @@ State3
  ^Y.* -> State1
 ```
 
-\* This feature is not present in the reference implementation of TextFSM. 
+\* This feature is not present in the reference implementation of TextFsm. 
 
 ## ~Global State
 Rules in the ~Global state are evaluated each time a new line is read and before the rules associated with the current state.
@@ -379,7 +379,7 @@ XState
  ^X${Test}
 ```
 
-\* This feature is not present in the reference implementation of TextFSM.
+\* This feature is not present in the reference implementation of TextFsm.
 ### ~Global State Filters
 State filters can be attached to rules in the ~Global state to limit the states that the rule applies to. The list of states can be negated by prefixing the state list with a '^'.
 
@@ -400,7 +400,7 @@ Normally, the last value before a row is recorded will appear in the result set.
 Value Metadata LAST_LINE_NUMBER (Line)
 Value Metadata,List INPUT_TEXT (Text)
 ```
-\*  This feature is not present in the reference implementation of TextFSM.
+\*  This feature is not present in the reference implementation of TextFsm.
 ### Metadata Patterns
 The metadata pattern is a value from the below list and not a regular expression.
 

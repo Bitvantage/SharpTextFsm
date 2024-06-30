@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -21,13 +21,13 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
-using Bitvantage.SharpTextFSM.Cache;
-using Bitvantage.SharpTextFSM.Definitions;
-using Bitvantage.SharpTextFSM.Exceptions;
-using Bitvantage.SharpTextFSM.Explain;
-using Bitvantage.SharpTextFSM.TemplateHelpers;
+using Bitvantage.SharpTextFsm.Cache;
+using Bitvantage.SharpTextFsm.Definitions;
+using Bitvantage.SharpTextFsm.Exceptions;
+using Bitvantage.SharpTextFsm.Explain;
+using Bitvantage.SharpTextFsm.TemplateHelpers;
 
-namespace Bitvantage.SharpTextFSM;
+namespace Bitvantage.SharpTextFsm;
 
 public enum TextFsmState
 {

@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
-using Bitvantage.SharpTextFSM.Attributes;
-using Bitvantage.SharpTextFSM.Exceptions;
-using Bitvantage.SharpTextFSM.ListCreators;
-using Bitvantage.SharpTextFSM.TypeConverters;
+using Bitvantage.SharpTextFsm.Attributes;
+using Bitvantage.SharpTextFsm.Exceptions;
+using Bitvantage.SharpTextFsm.ListCreators;
+using Bitvantage.SharpTextFsm.TypeConverters;
 
-namespace Bitvantage.SharpTextFSM.TemplateHelpers
+namespace Bitvantage.SharpTextFsm.TemplateHelpers
 {
     internal class ValueSetter
     {

@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Bitvantage.SharpTextFSM.TypeConverters
+namespace Bitvantage.SharpTextFsm.TypeConverters
 {
     public abstract class ValueConverter
     {

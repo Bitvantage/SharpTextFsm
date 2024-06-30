@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Bitvantage.SharpTextFSM.TypeConverters.EnumHelpers;
+namespace Bitvantage.SharpTextFsm.TypeConverters.EnumHelpers;
 
 [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
 public class EnumAliasAttribute : Attribute

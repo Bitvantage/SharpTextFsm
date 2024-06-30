@@ -1,5 +1,5 @@
 ﻿/*
-   Bitvantage.SharpTextFSM
+   Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
    
    This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,9 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Bitvantage.SharpTextFSM;
-using Bitvantage.SharpTextFSM.Exceptions;
-using Bitvantage.SharpTextFSM.TemplateHelpers;
+using Bitvantage.SharpTextFsm;
+using Bitvantage.SharpTextFsm.Exceptions;
+using Bitvantage.SharpTextFsm.TemplateHelpers;
 using System.Text.RegularExpressions;
 
 namespace Test
@@ -1116,7 +1116,7 @@ namespace Test
         }
 
         [Test(Description = "Trivial template")]
-        public void TestTextFSM01()
+        public void TestTextFsm01()
         {
             var templateText = """
                 Value Beer (.*)
@@ -1130,7 +1130,7 @@ namespace Test
         }
 
         [Test(Description = "Slightly more complex, multiple values")]
-        public void TestTextFSM02()
+        public void TestTextFsm02()
         {
             var templateText = """
                 Value A (.*)
