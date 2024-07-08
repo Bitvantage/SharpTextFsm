@@ -30,18 +30,20 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
     {
         private readonly bool _throwOnConversionFailure;
         private readonly object? _defaultValue;
+        private readonly bool _skipEmpty;
         private readonly ValueConverter _valueConverter;
         private readonly MemberInfo _memberInfo;
         private readonly ListCreator? _listCreator;
         private readonly Action<object, object> _setAction;
 
-        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, bool throwOnConversionFailure, object? defaultValue)
+        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, bool throwOnConversionFailure, object? defaultValue, bool skipEmpty)
         {
             _memberInfo = memberInfo;
             _listCreator = listCreator;
             _valueConverter = valueConverter;
             _throwOnConversionFailure = throwOnConversionFailure;
             _defaultValue = defaultValue;
+            _skipEmpty = skipEmpty;
 
             _setAction = GenerateAssignAction(memberInfo, underlyingType);
         }
@@ -99,7 +101,7 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
                     throw new TemplateTypeConversionException(valueConverter.GetType(), memberInfo, memberConfiguration.DefaultValue);
             }
 
-            valueSetter = new ValueSetter(memberInfo, underlyingType, listCreator, valueConverter, throwOnConversionFailure, defaultValue);
+            valueSetter = new ValueSetter(memberInfo, underlyingType, listCreator, valueConverter, throwOnConversionFailure, defaultValue, memberConfiguration?.SkipEmpty ?? false);
             return true;
         }
 
@@ -116,10 +118,15 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             if (_listCreator == null)
             {
                 // set value of single item
-                if (!_valueConverter.TryConvert((string)value, out var convertedValue))
+                var stringValue = (string)value;
+
+                if(_skipEmpty && stringValue == string.Empty)
+                    return;
+
+                if (!_valueConverter.TryConvert(stringValue, out var convertedValue))
                 {
                     if (_throwOnConversionFailure)
-                        throw new TemplateTypeConversionException(_valueConverter.GetType(), _memberInfo, (string)value);
+                        throw new TemplateTypeConversionException(_valueConverter.GetType(), _memberInfo, stringValue);
 
                     _setAction.Invoke(targetInstance, _defaultValue);
                 }
@@ -129,10 +136,20 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             else
             {
                 // set value of list
-                var stringValues = (List<string>)value;
+                List<string> stringValues;
+
+                if (_skipEmpty)
+                    stringValues = ((List<string>)value).Where(item => item != string.Empty).ToList();
+                else
+                    stringValues = (List<string>)value;
+
                 var convertedValues = Array.CreateInstance(_listCreator.ItemType, stringValues.Count);
+
                 for (var index = 0; index < stringValues.Count; index++)
                 {
+                    if (_skipEmpty && stringValues[index] == string.Empty)
+                        continue;
+
                     if (!_valueConverter.TryConvert(stringValues[index], out var convertedValue))
                     {
                         if (_throwOnConversionFailure)

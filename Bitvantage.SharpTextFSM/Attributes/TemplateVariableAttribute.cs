@@ -27,5 +27,6 @@ namespace Bitvantage.SharpTextFsm.Attributes
         public Type? ListConverter { get; set; }
         public bool ThrowOnConversionFailure { get; set; } = true;
         public string? DefaultValue { get; set; }
+        public bool SkipEmpty { get; set; } = true;
     }
 }

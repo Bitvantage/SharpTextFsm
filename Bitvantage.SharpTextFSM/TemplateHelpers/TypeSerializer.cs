@@ -222,7 +222,8 @@ internal class TypeSerializer<T>
             // set values
             foreach (var setter in _setters)
             {
-                var rawValue = row[setter.Key.Name];
+                if(!row.TryGetValue(setter.Key.Name, out var rawValue))
+                    continue;
 
                 // skip setting null values
                 // BUG: this means any unset value in the POCO ends up with its default value. Unclear if the is correct and desirable
