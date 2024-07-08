@@ -32,7 +32,6 @@ namespace Test.Generic.Converters
             Assert.That(value.ToString(), Is.EqualTo("22.05:00:00"));
         }
 
-
         [Test]
         public void Test02()
         {
@@ -53,20 +52,14 @@ namespace Test.Generic.Converters
             Assert.That(value.ToString(), Is.EqualTo("363.23:59:59"));
         }
 
-        [Test(Description = "Non sequential units")]
-        public void Test04()
+        [Test]
+        public void Test06()
         {
-            var success = new TerseTimeSpanConverter().TryConvert("1y3w10s", out var value);
+            var success = new TerseTimeSpanConverter().TryConvert("3 weeks, 5 hours, 33 minutes", out var value);
 
-            Assert.That(success, Is.False);
-        }
+            Assert.That(success, Is.True);
 
-        [Test(Description = "Non sequential units")]
-        public void Test05()
-        {
-            var success = new TerseTimeSpanConverter().TryConvert("3w10s", out var value);
-
-            Assert.That(success, Is.False);
+            Assert.That(value.ToString(), Is.EqualTo("21.05:33:00"));
         }
     }
 }

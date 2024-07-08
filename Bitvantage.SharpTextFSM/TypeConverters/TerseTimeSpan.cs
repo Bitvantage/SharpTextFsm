@@ -63,27 +63,6 @@ namespace Bitvantage.SharpTextFsm.TypeConverters
                 return false;
             }
 
-            // matched groups are optional; but must be consecutive
-            var matched = false; // is set on the first match
-            var matchDone = false; // is set on the first non-match after a match
-            for (var groupIndex = 1; groupIndex < match.Groups.Count; groupIndex++)
-            {
-                if (match.Groups[groupIndex].Success)
-                {
-                    if (matchDone)
-                    {
-                        value = TimeSpan.Zero;
-                        return false;
-                    }
-
-                    matched = true;
-                }
-                else if (matched == true)
-                {
-                    matchDone = true;
-                }
-            }
-
             var years = 0;
             var weeks = 0;
             var days = 0;
