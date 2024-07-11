@@ -279,8 +279,13 @@ public class Template
 
     public ExplainResult<T> Explain<T>(string text)
     {
+        return Explain<T>(text, null);
+    }
+    
+    public ExplainResult<T> Explain<T>(string text, object? state)
+    {
         if (_template != null)
-            return _template.Explain<T>(text);
+            return _template.Explain<T>(text, state);
 
         var explainResult = new ExplainResult<T>();
         ParseInternal(text, explainResult);
@@ -329,13 +334,18 @@ public class Template
 
     public IEnumerable<T> Parse<T>(string text)
     {
+        return Parse<T>(text, null);
+    }
+
+    public IEnumerable<T> Parse<T>(string text, object? state)
+    {
         if (_template != null)
-            return _template.Parse<T>(text);
+            return _template.Parse<T>(text, state);
 
         var valueCollection = Parse(text, null);
 
         var typeSerializer = (TypeSerializer<T>)_typeSerializerCache.GetOrAdd(typeof(T), _ => new TypeSerializer<T>(_valueDescriptorCollection));
-        var values = typeSerializer.Serialize(valueCollection);
+        var values = typeSerializer.Serialize(valueCollection, state);
 
         return values;
     }
@@ -551,7 +561,7 @@ public class Template
         return values;
     }
 
-    private IEnumerable<T> ParseInternal<T>(string text, ExplainResult<T>? explainResult = null)
+    private IEnumerable<T> ParseInternal<T>(string text, ExplainResult<T>? explainResult = null, object? state = null)
     {
         if (_template != null)
             return _template.ParseInternal(text, explainResult);
@@ -560,7 +570,7 @@ public class Template
 
         var valueCollection = ParseInternal(new StringReader(text), explainResult);
 
-        var values = typeSerializer.Serialize(valueCollection);
+        var values = typeSerializer.Serialize(valueCollection, state);
 
         if (explainResult != null)
         {

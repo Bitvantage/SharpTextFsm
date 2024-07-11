@@ -16,12 +16,13 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Collections.Immutable;
 using Bitvantage.SharpTextFsm.TemplateHelpers;
 
 namespace Bitvantage.SharpTextFsm
 {
     public interface ITemplateValidator
     {
-        public bool Validate(Row row);
+        public bool Validate(Row currentRow, int currentRowIndex, IImmutableList<Row> allRows, object? state);
     }
 }

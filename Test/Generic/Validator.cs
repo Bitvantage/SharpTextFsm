@@ -16,6 +16,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Collections.Immutable;
 using Bitvantage.SharpTextFsm;
 using Bitvantage.SharpTextFsm.TemplateHelpers;
 
@@ -62,9 +63,9 @@ namespace Test.Generic
             Assert.That(results[1].UnboundProperty, Is.EqualTo(60000));
         }
 
-        bool ITemplateValidator.Validate(Row row)
+        public bool Validate(Row currentRow, int currentRowIndex, IImmutableList<Row> allRows, object? state)
         {
-            UnboundProperty = int.Parse((string)row["ValueField"]) * 100;
+            UnboundProperty = int.Parse((string)currentRow["ValueField"]) * 100;
 
             if (ValueProperty == 300)
                 return false;
@@ -74,5 +75,5 @@ namespace Test.Generic
             
             return true;
         }
-    }
+   }
 }

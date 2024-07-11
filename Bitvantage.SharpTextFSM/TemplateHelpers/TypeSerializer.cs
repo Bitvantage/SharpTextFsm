@@ -16,6 +16,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Collections.Immutable;
 using System.Reflection;
 using Bitvantage.SharpTextFsm.Attributes;
 using Bitvantage.SharpTextFsm.Exceptions;
@@ -25,7 +26,6 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers;
 internal class TypeSerializer<T>
 {
     private readonly List<Action<T, object>> RawRowSetters;
-
     private readonly Dictionary<ValueDescriptor, List<ValueSetter>> _setters;
 
     public TypeSerializer(ValueDescriptorCollection valueDescriptorCollection)
@@ -212,10 +212,15 @@ internal class TypeSerializer<T>
         return valueSetters;
     }
 
-    public IEnumerable<T> Serialize(RowCollection rows)
+    public IEnumerable<T> Serialize(RowCollection rows, object? state)
     {
+        var rowIndex = -1;
+        IImmutableList<Row> rowsCopy = rows.ToImmutableList();
+
         foreach (var row in rows.Rows)
         {
+            rowIndex++;
+
             // create a new object
             var instance = Activator.CreateInstance<T>();
 
@@ -241,7 +246,7 @@ internal class TypeSerializer<T>
             if (instance is ITemplateValidator rowValidator)
             {
                 // if the validation failed, do not return it in the result set 
-                if (rowValidator.Validate(row))
+                if (rowValidator.Validate(row, rowIndex, rowsCopy, state))
                     yield return instance;
             }
             else
