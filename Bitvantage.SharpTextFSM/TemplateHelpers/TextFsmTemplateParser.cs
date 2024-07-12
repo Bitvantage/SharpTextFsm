@@ -93,7 +93,7 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
         [TemplateVariable(Name = "VALUE_NAME")]
         public string ValueName { get; set; }
 
-        [TemplateVariable(Name = "VALUE_PATTERN")]
+        [TemplateVariable(Name = "VALUE_PATTERN", SkipEmpty = false)]
         public string ValuePattern { get; set; }
 
         [TemplateVariable(Name = "STATE_NAME")]
