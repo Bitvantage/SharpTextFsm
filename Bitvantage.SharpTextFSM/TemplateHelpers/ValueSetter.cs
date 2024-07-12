@@ -28,27 +28,27 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
 {
     internal class ValueSetter
     {
-        private readonly bool _throwOnConversionFailure;
         private readonly object? _defaultValue;
-        private readonly bool _skipEmpty;
+        private readonly TemplateVariableAttribute _variableConfiguration;
+        private readonly TemplateTranslationAttribute[] _translations;
         private readonly ValueConverter _valueConverter;
         private readonly MemberInfo _memberInfo;
         private readonly ListCreator? _listCreator;
         private readonly Action<object, object> _setAction;
 
-        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, bool throwOnConversionFailure, object? defaultValue, bool skipEmpty)
+        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, object? defaultValue, TemplateVariableAttribute variableConfiguration, TemplateTranslationAttribute[] translations)
         {
             _memberInfo = memberInfo;
             _listCreator = listCreator;
             _valueConverter = valueConverter;
-            _throwOnConversionFailure = throwOnConversionFailure;
             _defaultValue = defaultValue;
-            _skipEmpty = skipEmpty;
+            _variableConfiguration = variableConfiguration;
+            _translations = translations;
 
             _setAction = GenerateAssignAction(memberInfo, underlyingType);
         }
 
-        public static bool TryCreate(ValueDescriptor valueDescriptor, TemplateVariableAttribute? memberConfiguration, MemberInfo memberInfo, Type underlyingType, [NotNullWhen(true)] out ValueSetter? valueSetter)
+        public static bool TryCreate(ValueDescriptor valueDescriptor, TemplateVariableAttribute memberConfiguration, TemplateTranslationAttribute[] translations, MemberInfo memberInfo, Type underlyingType, [NotNullWhen(true)] out ValueSetter? valueSetter)
         {
             ListCreator? listCreator = null;
             // if the TextFSM descriptor is a list, then create a list creator to handle it
@@ -74,16 +74,9 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
                 return false;
             }
 
-            // set what to do on a conversion failure
-            bool throwOnConversionFailure;
-            if (memberConfiguration != null)
-                throwOnConversionFailure = memberConfiguration.ThrowOnConversionFailure;
-            else
-                throwOnConversionFailure = true;
-
             // set the default value on a conversion failure
             object? defaultValue = null;
-            if (!throwOnConversionFailure)
+            if (!memberConfiguration.ThrowOnConversionFailure)
             {
                 // if there is no default value specified, use the types default value
                 if (memberConfiguration.DefaultValue == null)
@@ -101,7 +94,7 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
                     throw new TemplateTypeConversionException(valueConverter.GetType(), memberInfo, memberConfiguration.DefaultValue);
             }
 
-            valueSetter = new ValueSetter(memberInfo, underlyingType, listCreator, valueConverter, throwOnConversionFailure, defaultValue, memberConfiguration?.SkipEmpty ?? false);
+            valueSetter = new ValueSetter(memberInfo, underlyingType, listCreator, valueConverter, defaultValue, memberConfiguration, translations);
             return true;
         }
 
@@ -120,12 +113,15 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
                 // set value of single item
                 var stringValue = (string)value;
 
-                if(_skipEmpty && stringValue == string.Empty)
+                // apply any string translations
+                stringValue = TemplateTranslationAttribute.TranslateAll(_translations, stringValue);
+
+                if(stringValue == null || (_variableConfiguration.SkipEmpty && stringValue == string.Empty))
                     return;
 
                 if (!_valueConverter.TryConvert(stringValue, out var convertedValue))
                 {
-                    if (_throwOnConversionFailure)
+                    if (_variableConfiguration.ThrowOnConversionFailure)
                         throw new TemplateTypeConversionException(_valueConverter.GetType(), _memberInfo, stringValue);
 
                     _setAction.Invoke(targetInstance, _defaultValue);
@@ -136,23 +132,21 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             else
             {
                 // set value of list
-                List<string> stringValues;
-
-                if (_skipEmpty)
-                    stringValues = ((List<string>)value).Where(item => item != string.Empty).ToList();
-                else
-                    stringValues = (List<string>)value;
+                var stringValues = ((List<string>)value)
+                    .Select(stringValue => TemplateTranslationAttribute.TranslateAll(_translations, stringValue))
+                    .Where(item => item != null && (!_variableConfiguration.SkipEmpty || item != string.Empty))
+                    .ToList();
 
                 var convertedValues = Array.CreateInstance(_listCreator.ItemType, stringValues.Count);
 
                 for (var index = 0; index < stringValues.Count; index++)
                 {
-                    if (_skipEmpty && stringValues[index] == string.Empty)
+                    if (_variableConfiguration.SkipEmpty && stringValues[index] == string.Empty)
                         continue;
 
                     if (!_valueConverter.TryConvert(stringValues[index], out var convertedValue))
                     {
-                        if (_throwOnConversionFailure)
+                        if (_variableConfiguration.ThrowOnConversionFailure)
                             throw new TemplateTypeConversionException(_valueConverter.GetType(), _memberInfo, (string)value);
 
                         convertedValues.SetValue(_defaultValue, index);

@@ -90,19 +90,19 @@ internal class TypeSerializer<T>
 
         var namedFields = typeof(T)
             .GetFields(BindingFlags.Public | BindingFlags.Instance)
-            .Select(info => new { Member = (MemberInfo)info, Metadata = info.GetCustomAttribute<TemplateVariableAttribute>() })
+            .Select(info => new { Member = (MemberInfo)info, Metadata = info.GetCustomAttribute<TemplateVariableAttribute>(), Translations = info.GetCustomAttributes<TemplateTranslationAttribute>().ToArray() })
             .Where(item => item.Metadata != null)
             .Where(item => !item.Metadata!.Ignore)
-            .Select(item => new NamedFieldPair(item.Metadata.Name, item.Member, item.Metadata));
+            .Select(item => new NamedFieldPair(item.Metadata.Name, item.Member, item.Metadata, item.Translations));
 
         var namedProperties = typeof(T)
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Select(info => new { Member = info, Metadata = info.GetCustomAttribute<TemplateVariableAttribute>() })
+            .Select(info => new { Member = info, Metadata = info.GetCustomAttribute<TemplateVariableAttribute>(), Translations = info.GetCustomAttributes<TemplateTranslationAttribute>().ToArray() })
             .Where(item => item.Member.CanWrite)
-            .Select(item => new { Member = (MemberInfo)item.Member, item.Metadata })
+            .Select(item => new { Member = (MemberInfo)item.Member, item.Metadata, item.Translations })
             .Where(item => item.Metadata != null)
             .Where(item => !item.Metadata!.Ignore)
-            .Select(item => new NamedFieldPair(item.Metadata.Name, item.Member, item.Metadata));
+            .Select(item => new NamedFieldPair(item.Metadata.Name, item.Member, item.Metadata, item.Translations));
 
         var namedFieldPairs = Enumerable.Empty<NamedFieldPair>()
             .Concat(namedFields)
@@ -119,13 +119,13 @@ internal class TypeSerializer<T>
 
         var unnamedFields = typeof(T)
             .GetFields(BindingFlags.Public | BindingFlags.Instance)
-            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<TemplateVariableAttribute>()))
+            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<TemplateVariableAttribute>(), item.GetCustomAttributes<TemplateTranslationAttribute>().ToArray()))
             .Where(item => item.Configuration?.Name == null && (item.Configuration?.Ignore ?? false) == false);
 
         var unnamedProperties = typeof(T)
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(item => item.CanWrite)
-            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<TemplateVariableAttribute>()))
+            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<TemplateVariableAttribute>(), item.GetCustomAttributes<TemplateTranslationAttribute>().ToArray()))
             .Where(item => item.Configuration?.Name == null && (item.Configuration?.Ignore ?? false) == false);
 
         var unnamedFieldPairs = Enumerable.Empty<NamedFieldPair>()
@@ -158,7 +158,7 @@ internal class TypeSerializer<T>
                 // create a value setter for each member
                 var valueDescriptorSetters = new List<ValueSetter>();
                 foreach (var namedFieldPair in fieldPairs)
-                    if (ValueSetter.TryCreate(valueDescriptor, namedFieldPair.Configuration, namedFieldPair.MemberInfo, namedFieldPair.UnderlyingType, out var valueSetter))
+                    if (ValueSetter.TryCreate(valueDescriptor, namedFieldPair.Configuration ?? TemplateVariableAttribute.Default, namedFieldPair.TemplateTranslations?? new TemplateTranslationAttribute[] { }, namedFieldPair.MemberInfo, namedFieldPair.UnderlyingType, out var valueSetter))
                         valueDescriptorSetters.Add(valueSetter);
                     else
                         throw new ValueConverterCreationException($"Could not create a value converter for {namedFieldPair.UnderlyingType}.{namedFieldPair.MemberInfo.Name}");
@@ -195,7 +195,7 @@ internal class TypeSerializer<T>
                 // if there is a matching pair; generate a setter
                 if (unnamedFieldPair != null)
                 {
-                    if (ValueSetter.TryCreate(valueDescriptor, unnamedFieldPair.Configuration, unnamedFieldPair.MemberInfo, unnamedFieldPair.UnderlyingType, out var valueSetter))
+                    if (ValueSetter.TryCreate(valueDescriptor, unnamedFieldPair.Configuration ?? TemplateVariableAttribute.Default, unnamedFieldPair.TemplateTranslations ?? new TemplateTranslationAttribute[]{}, unnamedFieldPair.MemberInfo, unnamedFieldPair.UnderlyingType, out var valueSetter))
                         valueSetters.Add(valueDescriptor, new List<ValueSetter> { valueSetter });
 
                     unmappedValueDescriptors.Remove(valueDescriptor);
@@ -254,7 +254,7 @@ internal class TypeSerializer<T>
         }
     }
 
-    public record NamedFieldPair(string Name, MemberInfo MemberInfo, TemplateVariableAttribute? Configuration)
+    public record NamedFieldPair(string Name, MemberInfo MemberInfo, TemplateVariableAttribute? Configuration, TemplateTranslationAttribute[]? TemplateTranslations)
     {
         public Type UnderlyingType
         {

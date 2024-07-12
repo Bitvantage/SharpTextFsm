@@ -230,6 +230,14 @@ class CommaSeparatedList : ListCreator<string,string>
 | GenericListCreator        | Converts TestFSM lists to a generic list          |
 | ReadOnlyCollectionCreator | Converts TestFSM lists to a read-only collection  |
 
+### Translations
+Before a value is converted and assigned, it can be translated from one value to another using the TemplateTranslationAttribute.
+```csharp
+[TemplateTranslation("old value", "new value")] // "old value" -> "new value"
+[TemplateTranslation("-", null)]                // Value is not set if the string value is null
+[TemplateTranslation("*", "")]                  // Value is not set if SkipEmpty is true (default) or empty if SkipEmpty is false
+public string Value { get; set; }
+```
 
 ## Raw Rows
 The TextFSM row that is used to generate the record can be included in the record. This can be useful for reference purposes or used by the internal logic of the class.
