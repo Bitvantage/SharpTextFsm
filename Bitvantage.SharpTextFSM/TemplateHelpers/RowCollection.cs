@@ -144,9 +144,6 @@ public class RowCollection : IReadOnlyList<Row>
                         CurrentRow.Add(valueDescriptor.Value.Name, null);
                         break;
 
-                    case UnmatchedHandling.Skip:
-                        break;
-
                     default:
                         throw
                             new ArgumentOutOfRangeException();
@@ -160,9 +157,6 @@ public class RowCollection : IReadOnlyList<Row>
 
                     case UnmatchedHandling.Null:
                         CurrentRow.Add(valueDescriptor.Value.Name, null);
-                        break;
-
-                    case UnmatchedHandling.Skip:
                         break;
 
                     default:

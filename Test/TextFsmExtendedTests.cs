@@ -250,35 +250,6 @@ internal class TextFsmExtendedTests
     }
 
     [Test]
-    public void UnmatchedHandlingSkip01()
-    {
-        var template = new Template("""
-            Value boo (one)
-            Value hoo (two)
-
-            Start
-             ^${boo} -> Record
-             ^${hoo} -> Record
-             
-            """, new TemplateOptions(UnmatchedHandling.Skip));
-
-        var data = """
-            one
-            two
-            """;
-
-        var result = template.Parse(data);
-
-        Assert.That(result.Count, Is.EqualTo(2));
-
-        Assert.That(result[0]["boo"], Is.EqualTo("one"));
-        Assert.That(result[0].ContainsKey("hoo"), Is.EqualTo(false));
-
-        Assert.That(result[1].ContainsKey("boo"), Is.EqualTo(false));
-        Assert.That(result[1]["hoo"], Is.EqualTo("two"));
-    }
-
-    [Test]
     public void UnmatchedHandlingEmpty01()
     {
         var template = new Template("""

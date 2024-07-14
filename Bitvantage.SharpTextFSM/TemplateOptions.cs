@@ -22,7 +22,6 @@ namespace Bitvantage.SharpTextFsm
     {
         Empty = 1,
         Null = 2,
-        Skip=3,
     }
 
     public record TemplateOptions(UnmatchedHandling UnmatchedValueHandling = UnmatchedHandling.Empty, UnmatchedHandling UnmatchedListHandling = UnmatchedHandling.Empty)
