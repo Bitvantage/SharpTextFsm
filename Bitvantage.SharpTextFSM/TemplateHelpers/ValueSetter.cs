@@ -30,13 +30,13 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
     {
         private readonly object? _defaultValue;
         private readonly TemplateVariableAttribute _variableConfiguration;
-        private readonly TemplateTranslationAttribute[] _translations;
+        private readonly TemplateValueTransformerAttribute[] _translations;
         private readonly ValueConverter _valueConverter;
         private readonly MemberInfo _memberInfo;
         private readonly ListCreator? _listCreator;
         private readonly Action<object, object> _setAction;
 
-        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, object? defaultValue, TemplateVariableAttribute variableConfiguration, TemplateTranslationAttribute[] translations)
+        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, object? defaultValue, TemplateVariableAttribute variableConfiguration, TemplateValueTransformerAttribute[] translations)
         {
             _memberInfo = memberInfo;
             _listCreator = listCreator;
@@ -48,7 +48,7 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             _setAction = GenerateAssignAction(memberInfo, underlyingType);
         }
 
-        public static bool TryCreate(ValueDescriptor valueDescriptor, TemplateVariableAttribute memberConfiguration, TemplateTranslationAttribute[] translations, MemberInfo memberInfo, Type underlyingType, [NotNullWhen(true)] out ValueSetter? valueSetter)
+        public static bool TryCreate(ValueDescriptor valueDescriptor, TemplateVariableAttribute memberConfiguration, TemplateValueTransformerAttribute[] translations, MemberInfo memberInfo, Type underlyingType, [NotNullWhen(true)] out ValueSetter? valueSetter)
         {
             ListCreator? listCreator = null;
             // if the TextFSM descriptor is a list, then create a list creator to handle it
@@ -113,10 +113,25 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
                 // set value of single item
                 var stringValue = (string)value;
 
-                // apply any string translations
-                stringValue = TemplateTranslationAttribute.TranslateAll(_translations, stringValue);
+                // trim the value when configured
+                stringValue = _variableConfiguration.Trim switch
+                {
+                    TemplateVariableAttribute.TrimType.Trim => stringValue.Trim(),
+                    TemplateVariableAttribute.TrimType.TrimStart => stringValue.TrimStart(),
+                    TemplateVariableAttribute.TrimType.TrimEnd => stringValue.TrimEnd(),
+                    TemplateVariableAttribute.TrimType.None => stringValue,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
-                if(stringValue == null || (_variableConfiguration.SkipEmpty && stringValue == string.Empty))
+                // apply any string translations
+                stringValue = TemplateValueTransformerAttribute.Transform(_translations, stringValue);
+
+                // skip null strings
+                if (stringValue == null)
+                    return;
+
+                // skip empty values when SkipEmpty is configured
+                if((_variableConfiguration.SkipEmpty && stringValue == string.Empty))
                     return;
 
                 if (!_valueConverter.TryConvert(stringValue, out var convertedValue))
@@ -133,7 +148,7 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             {
                 // set value of list
                 var stringValues = ((List<string>)value)
-                    .Select(stringValue => TemplateTranslationAttribute.TranslateAll(_translations, stringValue))
+                    .Select(stringValue => TemplateValueTransformerAttribute.Transform(_translations, stringValue))
                     .Where(item => item != null && (!_variableConfiguration.SkipEmpty || item != string.Empty))
                     .ToList();
 

@@ -21,14 +21,18 @@ using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Generic
 {
-    internal class Translations : ITemplate
+    internal class Transformer : ITemplate
     {
         [TemplateVariable(Name = "ValueProperty")]
-        [TemplateTranslation("100", "1000")]
-        [TemplateTranslation("101", "")]
+        [TemplateValueTransformer("204", "100", MatchMode.Literal, MatchMethod.Full, MatchDisposition.Continue)]
+        [TemplateValueTransformer("100", "1000")]
+        [TemplateValueTransformer("101", "")]
+        [TemplateValueTransformer(@"^1\d3$", "999", MatchMode.Regex)]
         public long? ValueProperty { get; set; }
-        [TemplateTranslation("200", "2000")] 
-        [TemplateTranslation("201", null)] 
+        [TemplateValueTransformer("200", "2000")] 
+        [TemplateValueTransformer("201", null)] 
+        [TemplateValueTransformer("201", null)]
+        [TemplateValueTransformer(@"^2\d3", "999", MatchMode.Regex, MatchMethod.Substring)]
         public long? ValueField { get; set; }
 
         string ITemplate.TextFsmTemplate =>
@@ -44,7 +48,7 @@ namespace Test.Generic
         [Test]
         public void Test()
         {
-            var template = Template.FromType<Translations>();
+            var template = Template.FromType<Transformer>();
             var data = """
                 P100
                 F200
@@ -52,11 +56,14 @@ namespace Test.Generic
                 F201
                 P102
                 F202
+                P103
+                F203888
+                P204
                 """;
 
-            var results = template.Parse<Translations>(data).ToList();
+            var results = template.Parse<Transformer>(data).ToList();
 
-            Assert.That(results.Count, Is.EqualTo(3));
+            Assert.That(results.Count, Is.EqualTo(5));
 
             Assert.That(results[0].ValueProperty, Is.EqualTo(1000));
             Assert.That(results[0].ValueField, Is.EqualTo(2000));
@@ -66,6 +73,13 @@ namespace Test.Generic
 
             Assert.That(results[2].ValueProperty, Is.EqualTo(102));
             Assert.That(results[2].ValueField, Is.EqualTo(202));
+
+            Assert.That(results[3].ValueProperty, Is.EqualTo(999));
+            Assert.That(results[3].ValueField, Is.EqualTo(999888));
+
+            Assert.That(results[4].ValueProperty, Is.EqualTo(1000));
+            Assert.That(results[4].ValueField, Is.Null);
+
         }
     }
 
