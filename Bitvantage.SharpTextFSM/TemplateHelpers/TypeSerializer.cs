@@ -169,7 +169,7 @@ internal class TypeSerializer<T>
                 unmappedValueDescriptors.Remove(valueDescriptor);
             }
             else
-                throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(VariableAttribute)}: {string.Join(", ", usedExplicitNames)}");
+                throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(VariableAttribute)}: {fieldPairs.Key}");
         }
 
         // go through each possible mapping strategy combination
