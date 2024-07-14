@@ -235,7 +235,8 @@ internal class TypeSerializer<T>
                 if (rawValue == null)
                     continue;
 
-                setter.Value.First().SetValue(instance, rawValue);
+                foreach (var valueSetter in setter.Value)
+                    valueSetter.SetValue(instance!, rawValue);
             }
 
             // set fields and properties that have the RawRowAttribute
