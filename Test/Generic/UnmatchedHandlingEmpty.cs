@@ -17,12 +17,15 @@
 */
 
 using Bitvantage.SharpTextFsm;
+using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Generic
 {
     internal class UnmatchedHandlingEmpty : ITemplate
     {
+        [Variable(SkipEmpty = false)]
         public string X { get; set; }
+        [Variable(SkipEmpty = false)]
         public string Y { get; set; }
 
         string ITemplate.TextFsmTemplate =>
