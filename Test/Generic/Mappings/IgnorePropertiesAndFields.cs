@@ -23,9 +23,9 @@ namespace Test.Generic.Mappings
 {
     internal class IgnorePropertiesAndFields : ITemplate
     {
-        [TemplateVariable(Ignore = true)]
+        [Variable(Ignore = true)]
         public long ValueProperty { get; set; }
-        [TemplateVariable(Ignore = true)]
+        [Variable(Ignore = true)]
         public long ValueField { get; set; }
 
         string ITemplate.TextFsmTemplate =>

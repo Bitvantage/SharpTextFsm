@@ -21,18 +21,18 @@ using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Other
 {
-    [TemplateRecord(MappingStrategy.IgnoreCase)]
+    [Template(MappingStrategy.IgnoreCase)]
     internal class CiscoShowIpRouteOspfRecord
     {
-        [TemplateVariable(Name = "network")]
+        [Variable(Name = "network")]
         public IPAddress Network { get; init; }
-        [TemplateVariable(Name = "mask")]
+        [Variable(Name = "mask")]
         public int Mask { get; init; }
-        [TemplateVariable(Name = "distance")]
+        [Variable(Name = "distance")]
         public int Distance { get; init; }
-        [TemplateVariable(Name = "metric")]
+        [Variable(Name = "metric")]
         public int Metric { get; init; }
-        [TemplateVariable(Name = "nexthop")]
+        [Variable(Name = "nexthop")]
         public List<IPAddress> NextHop { get; init; }
 
     }

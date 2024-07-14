@@ -23,7 +23,7 @@ namespace Test.Generic.Mappings
 {
     internal class ListCreator : ITemplate
     {
-        [TemplateVariable(ListConverter = typeof(CommaSeparatedList))]
+        [Variable(ListConverter = typeof(CommaSeparatedList))]
         public string ValueProperty { get; set; }
 
         string ITemplate.TextFsmTemplate =>

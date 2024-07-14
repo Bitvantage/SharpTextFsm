@@ -45,13 +45,13 @@ namespace Test.Other
             2
             """;
 
-        [TemplateVariable(Name = "LETTERS")]
+        [Variable(Name = "LETTERS")]
         public List<string> Letters { get; set; }
 
-        [TemplateVariable(Name = "EMPTY_LIST")]
+        [Variable(Name = "EMPTY_LIST")]
         public List<string> EmptyList { get; set; }
 
-        [TemplateVariable(Name = "NUMBER")]
+        [Variable(Name = "NUMBER")]
         public int Number { get; set; }
 
         [Test(Description = "Unpopulated lists are empty and not null")]

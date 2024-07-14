@@ -27,7 +27,7 @@ namespace Test.Examples
     {
         public string Protocol { get; set; }
         public IPAddress IpAddress { get; set; }
-        [TemplateVariable(ThrowOnConversionFailure = false)]
+        [Variable(ThrowOnConversionFailure = false)]
         public long? Age { get; set; }
         public string MacAddress { get; set; }
         public string Type { get; set; }

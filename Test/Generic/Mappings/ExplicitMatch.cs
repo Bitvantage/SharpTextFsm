@@ -23,9 +23,9 @@ namespace Test.Generic.Mappings
 {
     internal class ExplicitMatch : ITemplate
     {
-        [TemplateVariable(Name = "ValueProperty")]
+        [Variable(Name = "ValueProperty")]
         public long ValuePropertyX { get; set; }
-        [TemplateVariable(Name = "ValueField")]
+        [Variable(Name = "ValueField")]
 
         public long ValueFieldX { get; set; }
 

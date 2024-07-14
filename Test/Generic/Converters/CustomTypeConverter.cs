@@ -26,9 +26,9 @@ namespace Test.Generic.Converters
 {
     internal class CustomTypeConverter : ITemplate
     {
-        [TemplateVariable(Converter = typeof(MyTypeConverter))]
+        [Variable(Converter = typeof(MyTypeConverter))]
         public MyCustomType ValueProperty { get; set; }
-        [TemplateVariable(Converter = typeof(MyTypeConverter))]
+        [Variable(Converter = typeof(MyTypeConverter))]
         public MyCustomType ValueField;
 
         string ITemplate.TextFsmTemplate =>

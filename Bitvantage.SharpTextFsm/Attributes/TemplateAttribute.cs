@@ -38,11 +38,11 @@ namespace Bitvantage.SharpTextFsm.Attributes
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class TemplateRecordAttribute : Attribute
+    public class TemplateAttribute : Attribute
     {
         public MappingStrategy MappingStrategies { get; }
 
-        public TemplateRecordAttribute(MappingStrategy mappingStrategies)
+        public TemplateAttribute(MappingStrategy mappingStrategies)
         {
             MappingStrategies = mappingStrategies;
         }

@@ -24,10 +24,10 @@ namespace Test.Generic.Mappings
 {
     internal class Converter : ITemplate
     {
-        [TemplateVariable(Converter = typeof(ConverterTest))]
+        [Variable(Converter = typeof(ConverterTest))]
         public long ValueProperty { get; set; }
 
-        [TemplateVariable(Converter = typeof(ConverterTest))]
+        [Variable(Converter = typeof(ConverterTest))]
         public long ValueField { get; set; }
 
         string ITemplate.TextFsmTemplate =>

@@ -21,11 +21,11 @@ using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Generic.Mappings
 {
-    internal class EmptyTemplateVariableAttribute : ITemplate
+    internal class EmptyVariableAttribute : ITemplate
     {
-        [TemplateVariable]
+        [Variable]
         public long ValueProperty { get; set; }
-        [TemplateVariable]
+        [Variable]
 
         public long ValueField { get; set; }
 
@@ -42,13 +42,13 @@ namespace Test.Generic.Mappings
         [Test]
         public void Test()
         {
-            var template = Template.FromType<EmptyTemplateVariableAttribute>();
+            var template = Template.FromType<EmptyVariableAttribute>();
             var data = """
                 P100
                 F200
                 """;
 
-            var results = template.Parse<EmptyTemplateVariableAttribute>(data).ToList();
+            var results = template.Parse<EmptyVariableAttribute>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].ValueProperty, Is.EqualTo(100));

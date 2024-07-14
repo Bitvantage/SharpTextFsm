@@ -48,55 +48,55 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             EndOfFile,
         }
 
-        [TemplateVariable(Name = "STATE")]
+        [Variable(Name = "STATE")]
         public StateState State { get; set; }
 
-        [TemplateVariable(Name = "TEXT")]
+        [Variable(Name = "TEXT")]
         public string Text { get; set; }
 
-        [TemplateVariable(Name = "LINE")]
+        [Variable(Name = "LINE")]
         public long Line { get; set; }
 
-        [TemplateVariable(Name = "COMMENTS")]
+        [Variable(Name = "COMMENTS")]
         public string[] Comment { get; set; }
 
-        [TemplateVariable(Name = "RULE_LINE_ACTION", ThrowOnConversionFailure = false)]
+        [Variable(Name = "RULE_LINE_ACTION", ThrowOnConversionFailure = false)]
         public LineAction? LineAction { get; set; }
 
-        [TemplateVariable(Name = "RULE_PATTERN")]
+        [Variable(Name = "RULE_PATTERN")]
         public string Pattern { get; set; }
 
-        [TemplateVariable(Name = "RULE_RECORD_ACTION", ThrowOnConversionFailure = false)]
+        [Variable(Name = "RULE_RECORD_ACTION", ThrowOnConversionFailure = false)]
         public RecordAction? RecordAction { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_ERROR", Converter = typeof(AnyValueAsTrueConverter))]
+        [Variable(Name = "RULE_STATE_ERROR", Converter = typeof(AnyValueAsTrueConverter))]
         public bool ErrorState { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_ERROR_MESSAGE")]
+        [Variable(Name = "RULE_STATE_ERROR_MESSAGE")]
         public string ErrorMessage { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_ERROR_STRING")]
+        [Variable(Name = "RULE_STATE_ERROR_STRING")]
         public string ErrorString { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_FILTER")]
+        [Variable(Name = "RULE_STATE_FILTER")]
         public List<string> StateFilters { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_FILTER_INVERSION", Converter = typeof(AnyValueAsTrueConverter))]
+        [Variable(Name = "RULE_STATE_FILTER_INVERSION", Converter = typeof(AnyValueAsTrueConverter))]
         public bool StateFilterInversion { get; set; }
 
-        [TemplateVariable(Name = "RULE_STATE_NAME")]
+        [Variable(Name = "RULE_STATE_NAME")]
         public string StateName { get; set; }
 
-        [TemplateVariable(Name = "VALUE_FLAGS", ThrowOnConversionFailure = false)]
+        [Variable(Name = "VALUE_FLAGS", ThrowOnConversionFailure = false)]
         public List<Option> ValueFlags { get; set; }
 
-        [TemplateVariable(Name = "VALUE_NAME")]
+        [Variable(Name = "VALUE_NAME")]
         public string ValueName { get; set; }
 
-        [TemplateVariable(Name = "VALUE_PATTERN", SkipEmpty = false)]
+        [Variable(Name = "VALUE_PATTERN", SkipEmpty = false)]
         public string ValuePattern { get; set; }
 
-        [TemplateVariable(Name = "STATE_NAME")]
+        [Variable(Name = "STATE_NAME")]
         public string StartName2 { get; set; }
 
         public static Template Instance { get; } = CreateTemplate();

@@ -19,7 +19,7 @@
 namespace Bitvantage.SharpTextFsm.Attributes;
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public class TemplateVariableAttribute : Attribute
+public class VariableAttribute : Attribute
 {
     public enum TrimType
     {
@@ -28,7 +28,7 @@ public class TemplateVariableAttribute : Attribute
         TrimStart,
         TrimEnd,
     }
-    internal static TemplateVariableAttribute Default { get; } = new();
+    internal static VariableAttribute Default { get; } = new();
 
     public Type? Converter { get; set; }
     public string? DefaultValue { get; set; }

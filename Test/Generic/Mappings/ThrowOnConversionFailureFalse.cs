@@ -23,10 +23,10 @@ namespace Test.Generic.Mappings
 {
     internal class ThrowOnConversionFailureFalse : ITemplate
     {
-        [TemplateVariable(ThrowOnConversionFailure = false)]
+        [Variable(ThrowOnConversionFailure = false)]
         public long? ValueProperty { get; set; }
 
-        [TemplateVariable(ThrowOnConversionFailure = false)]
+        [Variable(ThrowOnConversionFailure = false)]
         public long ValueField { get; set; }
 
         string ITemplate.TextFsmTemplate =>

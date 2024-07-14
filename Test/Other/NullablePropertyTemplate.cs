@@ -33,10 +33,10 @@ namespace Test.Other
              ^. -> Error
             """;
 
-        [TemplateVariable(Name = "A_NUMBER_MAYBE", ThrowOnConversionFailure = false)]
+        [Variable(Name = "A_NUMBER_MAYBE", ThrowOnConversionFailure = false)]
         public int? Number { get; set; }
 
-        [TemplateVariable(Name = "A_LETTER_ALWAYS")]
+        [Variable(Name = "A_LETTER_ALWAYS")]
         public string Letter { get; set; }
 
 

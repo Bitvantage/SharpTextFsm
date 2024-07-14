@@ -24,10 +24,10 @@ namespace Test.Generic.Mappings
 {
     internal class MissingValues : ITemplate
     {
-        [TemplateVariable(Name = "MissingProperty")]
+        [Variable(Name = "MissingProperty")]
         public long ValueProperty { get; set; }
 
-        [TemplateVariable(Name = "MissingField")]
+        [Variable(Name = "MissingField")]
         public long ValueField { get; set; }
 
         string ITemplate.TextFsmTemplate =>

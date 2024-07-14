@@ -21,10 +21,10 @@ using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Generic.Mappings
 {
-    [TemplateRecord(MappingStrategy.Disabled)]
+    [Template(MappingStrategy.Disabled)]
     internal class MappingStrategyDisabled : ITemplate
     {
-        [TemplateVariable(Name = "ValueProperty")]
+        [Variable(Name = "ValueProperty")]
         public long ValueProperty { get; set; }
         public long ValueField { get; set; }
 

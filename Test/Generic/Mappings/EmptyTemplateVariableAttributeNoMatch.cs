@@ -22,11 +22,11 @@ using Bitvantage.SharpTextFsm.Exceptions;
 
 namespace Test.Generic.Mappings
 {
-    internal class EmptyTemplateVariableAttributeNoMatch : ITemplate
+    internal class EmptyVariableAttributeNoMatch : ITemplate
     {
-        [TemplateVariable]
+        [Variable]
         public long ValueProperty { get; set; }
-        [TemplateVariable]
+        [Variable]
 
         public long ValueField { get; set; }
 
@@ -43,13 +43,13 @@ namespace Test.Generic.Mappings
         [Test]
         public void Test()
         {
-            var template = Template.FromType<EmptyTemplateVariableAttributeNoMatch>();
+            var template = Template.FromType<EmptyVariableAttributeNoMatch>();
             var data = """
                 P100
                 F200
                 """;
 
-            Assert.Catch<TemplateMapException>(()=> template.Parse<EmptyTemplateVariableAttributeNoMatch>(data));
+            Assert.Catch<TemplateMapException>(()=> template.Parse<EmptyVariableAttributeNoMatch>(data));
 
         }
     }

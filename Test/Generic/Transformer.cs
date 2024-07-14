@@ -23,16 +23,16 @@ namespace Test.Generic
 {
     internal class Transformer : ITemplate
     {
-        [TemplateVariable(Name = "ValueProperty")]
-        [TemplateValueTransformer("204", "100", MatchMode.Literal, MatchMethod.Full, MatchDisposition.Continue)]
-        [TemplateValueTransformer("100", "1000")]
-        [TemplateValueTransformer("101", "")]
-        [TemplateValueTransformer(@"^1\d3$", "999", MatchMode.Regex)]
+        [Variable(Name = "ValueProperty")]
+        [ValueTransformer("204", "100", MatchMode.Literal, MatchMethod.Full, MatchDisposition.Continue)]
+        [ValueTransformer("100", "1000")]
+        [ValueTransformer("101", "")]
+        [ValueTransformer(@"^1\d3$", "999", MatchMode.Regex)]
         public long? ValueProperty { get; set; }
-        [TemplateValueTransformer("200", "2000")] 
-        [TemplateValueTransformer("201", null)] 
-        [TemplateValueTransformer("201", null)]
-        [TemplateValueTransformer(@"^2\d3", "999", MatchMode.Regex, MatchMethod.Substring)]
+        [ValueTransformer("200", "2000")] 
+        [ValueTransformer("201", null)] 
+        [ValueTransformer("201", null)]
+        [ValueTransformer(@"^2\d3", "999", MatchMode.Regex, MatchMethod.Substring)]
         public long? ValueField { get; set; }
 
         string ITemplate.TextFsmTemplate =>

@@ -29,14 +29,14 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
     internal class ValueSetter
     {
         private readonly object? _defaultValue;
-        private readonly TemplateVariableAttribute _variableConfiguration;
-        private readonly TemplateValueTransformerAttribute[] _translations;
+        private readonly VariableAttribute _variableConfiguration;
+        private readonly ValueTransformerAttribute[] _translations;
         private readonly ValueConverter _valueConverter;
         private readonly MemberInfo _memberInfo;
         private readonly ListCreator? _listCreator;
         private readonly Action<object, object> _setAction;
 
-        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, object? defaultValue, TemplateVariableAttribute variableConfiguration, TemplateValueTransformerAttribute[] translations)
+        private ValueSetter(MemberInfo memberInfo, Type underlyingType, ListCreator? listCreator, ValueConverter valueConverter, object? defaultValue, VariableAttribute variableConfiguration, ValueTransformerAttribute[] translations)
         {
             _memberInfo = memberInfo;
             _listCreator = listCreator;
@@ -48,7 +48,7 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             _setAction = GenerateAssignAction(memberInfo, underlyingType);
         }
 
-        public static bool TryCreate(ValueDescriptor valueDescriptor, TemplateVariableAttribute memberConfiguration, TemplateValueTransformerAttribute[] translations, MemberInfo memberInfo, Type underlyingType, [NotNullWhen(true)] out ValueSetter? valueSetter)
+        public static bool TryCreate(ValueDescriptor valueDescriptor, VariableAttribute memberConfiguration, ValueTransformerAttribute[] translations, MemberInfo memberInfo, Type underlyingType, [NotNullWhen(true)] out ValueSetter? valueSetter)
         {
             ListCreator? listCreator = null;
             // if the TextFSM descriptor is a list, then create a list creator to handle it
@@ -116,15 +116,15 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
                 // trim the value when configured
                 stringValue = _variableConfiguration.Trim switch
                 {
-                    TemplateVariableAttribute.TrimType.Trim => stringValue.Trim(),
-                    TemplateVariableAttribute.TrimType.TrimStart => stringValue.TrimStart(),
-                    TemplateVariableAttribute.TrimType.TrimEnd => stringValue.TrimEnd(),
-                    TemplateVariableAttribute.TrimType.None => stringValue,
+                    VariableAttribute.TrimType.Trim => stringValue.Trim(),
+                    VariableAttribute.TrimType.TrimStart => stringValue.TrimStart(),
+                    VariableAttribute.TrimType.TrimEnd => stringValue.TrimEnd(),
+                    VariableAttribute.TrimType.None => stringValue,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
                 // apply any string translations
-                stringValue = TemplateValueTransformerAttribute.Transform(_translations, stringValue);
+                stringValue = ValueTransformerAttribute.Transform(_translations, stringValue);
 
                 // skip null strings
                 if (stringValue == null)
@@ -148,7 +148,7 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             {
                 // set value of list
                 var stringValues = ((List<string>)value)
-                    .Select(stringValue => TemplateValueTransformerAttribute.Transform(_translations, stringValue))
+                    .Select(stringValue => ValueTransformerAttribute.Transform(_translations, stringValue))
                     .Where(item => item != null && (!_variableConfiguration.SkipEmpty || item != string.Empty))
                     .ToList();
 
@@ -196,11 +196,11 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             return action;
         }
 
-        private static ValueConverter? CreateValueConverter(TemplateVariableAttribute? templateVariableAttribute, Type targetType)
+        private static ValueConverter? CreateValueConverter(VariableAttribute? templateVariableAttribute, Type targetType)
         {
             Type? converterType = null;
 
-            if (templateVariableAttribute is { Converter: not null }) // if there is a converter defined on the TemplateVariableAttribute, use it
+            if (templateVariableAttribute is { Converter: not null }) // if there is a converter defined on the VariableAttribute, use it
                 converterType = templateVariableAttribute.Converter;
             else if (targetType == typeof(string)) // if there is not a converter defined, try to use the GenericTryParseConverter, then the GenericParseConverter
                 converterType = typeof(StringConverter);
@@ -237,11 +237,11 @@ namespace Bitvantage.SharpTextFsm.TemplateHelpers
             }
         }
 
-        public static ListCreator? CreateListCreator(TemplateVariableAttribute? templateVariableAttribute, Type listType)
+        public static ListCreator? CreateListCreator(VariableAttribute? templateVariableAttribute, Type listType)
         {
             Type? converterType = null;
             
-            if (templateVariableAttribute is { ListConverter: not null }) // if there is a converter defined on the TemplateVariableAttribute, use it
+            if (templateVariableAttribute is { ListConverter: not null }) // if there is a converter defined on the VariableAttribute, use it
                 converterType = templateVariableAttribute.ListConverter;
             else if (templateVariableAttribute is { ListConverter: not null }) // if there is not a converter defined, try to use the built-in converters
                 converterType = templateVariableAttribute.Converter;

@@ -21,7 +21,7 @@ using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Generic.Mappings
 {
-    [TemplateRecord(MappingStrategy.SnakeCase | MappingStrategy.IgnoreCase | MappingStrategy.Exact)]
+    [Template(MappingStrategy.SnakeCase | MappingStrategy.IgnoreCase | MappingStrategy.Exact)]
     internal class MappingStrategyIgnoreCaseAndSnakeCase : ITemplate
     {
         public long ValueProperty { get; set; }

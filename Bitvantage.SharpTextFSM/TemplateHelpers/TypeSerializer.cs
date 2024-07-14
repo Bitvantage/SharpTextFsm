@@ -84,20 +84,20 @@ internal class TypeSerializer<T>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     private Dictionary<ValueDescriptor, List<ValueSetter>> BuildRowSetters(ValueDescriptorCollection valueDescriptorCollection)
     {
-        // members that have a TemplateVariableAttribute must match a ValueDescriptor
-        // multiple members with a TemplateVariableAttribute that define a Name can match the same ValueDescriptor
-        // members that do not have a name defined in their TemplateVariableAttribute are matched using the mapping strategy defined on the type
+        // members that have a VariableAttribute must match a ValueDescriptor
+        // multiple members with a VariableAttribute that define a Name can match the same ValueDescriptor
+        // members that do not have a name defined in their VariableAttribute are matched using the mapping strategy defined on the type
 
         var namedFields = typeof(T)
             .GetFields(BindingFlags.Public | BindingFlags.Instance)
-            .Select(info => new { Member = (MemberInfo)info, Metadata = info.GetCustomAttribute<TemplateVariableAttribute>(), Translations = info.GetCustomAttributes<TemplateValueTransformerAttribute>().ToArray() })
+            .Select(info => new { Member = (MemberInfo)info, Metadata = info.GetCustomAttribute<VariableAttribute>(), Translations = info.GetCustomAttributes<ValueTransformerAttribute>().ToArray() })
             .Where(item => item.Metadata != null)
             .Where(item => !item.Metadata!.Ignore)
             .Select(item => new NamedFieldPair(item.Metadata.Name, item.Member, item.Metadata, item.Translations));
 
         var namedProperties = typeof(T)
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Select(info => new { Member = info, Metadata = info.GetCustomAttribute<TemplateVariableAttribute>(), Translations = info.GetCustomAttributes<TemplateValueTransformerAttribute>().ToArray() })
+            .Select(info => new { Member = info, Metadata = info.GetCustomAttribute<VariableAttribute>(), Translations = info.GetCustomAttributes<ValueTransformerAttribute>().ToArray() })
             .Where(item => item.Member.CanWrite)
             .Select(item => new { Member = (MemberInfo)item.Member, item.Metadata, item.Translations })
             .Where(item => item.Metadata != null)
@@ -119,13 +119,13 @@ internal class TypeSerializer<T>
 
         var unnamedFields = typeof(T)
             .GetFields(BindingFlags.Public | BindingFlags.Instance)
-            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<TemplateVariableAttribute>(), item.GetCustomAttributes<TemplateValueTransformerAttribute>().ToArray()))
+            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<VariableAttribute>(), item.GetCustomAttributes<ValueTransformerAttribute>().ToArray()))
             .Where(item => item.Configuration?.Name == null && (item.Configuration?.Ignore ?? false) == false);
 
         var unnamedProperties = typeof(T)
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(item => item.CanWrite)
-            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<TemplateVariableAttribute>(), item.GetCustomAttributes<TemplateValueTransformerAttribute>().ToArray()))
+            .Select(item => new NamedFieldPair(item.Name, item, item.GetCustomAttribute<VariableAttribute>(), item.GetCustomAttributes<ValueTransformerAttribute>().ToArray()))
             .Where(item => item.Configuration?.Name == null && (item.Configuration?.Ignore ?? false) == false);
 
         var unnamedFieldPairs = Enumerable.Empty<NamedFieldPair>()
@@ -138,7 +138,7 @@ internal class TypeSerializer<T>
         // get the mapping strategy from the type; or use the default value if not configured
 
         var mappingStrategies = typeof(T)
-            .GetCustomAttribute<TemplateRecordAttribute>() ?
+            .GetCustomAttribute<TemplateAttribute>() ?
             .MappingStrategies ?? MappingStrategy.Exact | MappingStrategy.IgnoreCase | MappingStrategy.SnakeCase;
 
         // if the MappingStrategy flags include Disabled; remove any other flags 
@@ -158,7 +158,7 @@ internal class TypeSerializer<T>
                 // create a value setter for each member
                 var valueDescriptorSetters = new List<ValueSetter>();
                 foreach (var namedFieldPair in fieldPairs)
-                    if (ValueSetter.TryCreate(valueDescriptor, namedFieldPair.Configuration ?? TemplateVariableAttribute.Default, namedFieldPair.TemplateTranslations?? new TemplateValueTransformerAttribute[] { }, namedFieldPair.MemberInfo, namedFieldPair.UnderlyingType, out var valueSetter))
+                    if (ValueSetter.TryCreate(valueDescriptor, namedFieldPair.Configuration ?? VariableAttribute.Default, namedFieldPair.TemplateTranslations?? new ValueTransformerAttribute[] { }, namedFieldPair.MemberInfo, namedFieldPair.UnderlyingType, out var valueSetter))
                         valueDescriptorSetters.Add(valueSetter);
                     else
                         throw new ValueConverterCreationException($"Could not create a value converter for {namedFieldPair.UnderlyingType}.{namedFieldPair.MemberInfo.Name}");
@@ -169,7 +169,7 @@ internal class TypeSerializer<T>
                 unmappedValueDescriptors.Remove(valueDescriptor);
             }
             else
-                throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(TemplateVariableAttribute)}: {string.Join(", ", usedExplicitNames)}");
+                throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(VariableAttribute)}: {string.Join(", ", usedExplicitNames)}");
         }
 
         // go through each possible mapping strategy combination
@@ -195,7 +195,7 @@ internal class TypeSerializer<T>
                 // if there is a matching pair; generate a setter
                 if (unnamedFieldPair != null)
                 {
-                    if (ValueSetter.TryCreate(valueDescriptor, unnamedFieldPair.Configuration ?? TemplateVariableAttribute.Default, unnamedFieldPair.TemplateTranslations ?? new TemplateValueTransformerAttribute[]{}, unnamedFieldPair.MemberInfo, unnamedFieldPair.UnderlyingType, out var valueSetter))
+                    if (ValueSetter.TryCreate(valueDescriptor, unnamedFieldPair.Configuration ?? VariableAttribute.Default, unnamedFieldPair.TemplateTranslations ?? new ValueTransformerAttribute[]{}, unnamedFieldPair.MemberInfo, unnamedFieldPair.UnderlyingType, out var valueSetter))
                         valueSetters.Add(valueDescriptor, new List<ValueSetter> { valueSetter });
 
                     unmappedValueDescriptors.Remove(valueDescriptor);
@@ -207,7 +207,7 @@ internal class TypeSerializer<T>
 
         // check if any field or property values that are set with a configuration attribute that have no name have been missed
         if (configuredAndUnnamedMembers.Any())
-            throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(TemplateVariableAttribute)}: {string.Join(", ", configuredAndUnnamedMembers.Select(item=>item.Name))}");
+            throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(VariableAttribute)}: {string.Join(", ", configuredAndUnnamedMembers.Select(item=>item.Name))}");
 
         return valueSetters;
     }
@@ -254,7 +254,7 @@ internal class TypeSerializer<T>
         }
     }
 
-    public record NamedFieldPair(string Name, MemberInfo MemberInfo, TemplateVariableAttribute? Configuration, TemplateValueTransformerAttribute[]? TemplateTranslations)
+    public record NamedFieldPair(string Name, MemberInfo MemberInfo, VariableAttribute? Configuration, ValueTransformerAttribute[]? TemplateTranslations)
     {
         public Type UnderlyingType
         {

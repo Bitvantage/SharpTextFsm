@@ -23,10 +23,10 @@ namespace Test.Generic.Mappings
 {
     internal class Default : ITemplate
     {
-        [TemplateVariable(ThrowOnConversionFailure = false, DefaultValue = "50")]
+        [Variable(ThrowOnConversionFailure = false, DefaultValue = "50")]
         public long ValueProperty { get; set; }
 
-        [TemplateVariable(ThrowOnConversionFailure = false, DefaultValue = "75")] 
+        [Variable(ThrowOnConversionFailure = false, DefaultValue = "75")] 
         public long ValueField { get; set; }
 
         string ITemplate.TextFsmTemplate =>

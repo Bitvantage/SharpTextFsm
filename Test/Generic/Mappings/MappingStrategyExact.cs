@@ -21,7 +21,7 @@ using Bitvantage.SharpTextFsm.Attributes;
 
 namespace Test.Generic.Mappings
 {
-    [TemplateRecord(MappingStrategy.Exact)]
+    [Template(MappingStrategy.Exact)]
     internal class MappingStrategyExact : ITemplate
     {
         public long ValueProperty { get; set; }

@@ -59,22 +59,22 @@ namespace Test.Other.ConverterTemplates
             NULLABLE_LONG_THAT_IS_NULL: dog
             """;
 
-        [TemplateVariable(Name = "NUMBER", Converter = typeof(GenericTryParseConverter<int>))]
+        [Variable(Name = "NUMBER", Converter = typeof(GenericTryParseConverter<int>))]
         public int Number { get; set; }
 
-        [TemplateVariable(Name = "NULLABLE_NUMBER", Converter = typeof(GenericTryParseConverter<int?>))]
+        [Variable(Name = "NULLABLE_NUMBER", Converter = typeof(GenericTryParseConverter<int?>))]
         public int? NullableNumber { get; set; }
 
-        [TemplateVariable(Name = "NULLABLE_NUMBER_THAT_IS_NULL", Converter = typeof(GenericTryParseConverter<int?>), ThrowOnConversionFailure = false)]
+        [Variable(Name = "NULLABLE_NUMBER_THAT_IS_NULL", Converter = typeof(GenericTryParseConverter<int?>), ThrowOnConversionFailure = false)]
         public int? NullableNumberThatIsNull { get; set; }
 
-        [TemplateVariable(Name = "LONG", Converter = typeof(GenericTryParseConverter<long>))]
+        [Variable(Name = "LONG", Converter = typeof(GenericTryParseConverter<long>))]
         public long LONG { get; set; }
 
-        [TemplateVariable(Name = "NULLABLE_LONG", Converter = typeof(GenericTryParseConverter<long?>))]
+        [Variable(Name = "NULLABLE_LONG", Converter = typeof(GenericTryParseConverter<long?>))]
         public long? NullableLONG { get; set; }
 
-        [TemplateVariable(Name = "NULLABLE_LONG_THAT_IS_NULL", Converter = typeof(GenericTryParseConverter<long?>), ThrowOnConversionFailure = false)]
+        [Variable(Name = "NULLABLE_LONG_THAT_IS_NULL", Converter = typeof(GenericTryParseConverter<long?>), ThrowOnConversionFailure = false)]
         public long? NullableLONGThatIsNull { get; set; }
 
         [Test(Description = "Unpopulated lists are empty and not null")]

@@ -22,7 +22,7 @@ public enum MatchMode
 }
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
-public class TemplateValueTransformerAttribute : Attribute
+public class ValueTransformerAttribute : Attribute
 {
     private readonly string _oldValue;
     private readonly string? _newValue;
@@ -33,7 +33,7 @@ public class TemplateValueTransformerAttribute : Attribute
     private readonly MatchMethod _matchMethod;
     private readonly MatchDisposition _matchDisposition;
 
-    public TemplateValueTransformerAttribute(string oldValue, string? newValue, MatchMode matchMode = MatchMode.Literal, MatchMethod matchMethod = MatchMethod.Full, MatchDisposition matchDisposition = MatchDisposition.Stop)
+    public ValueTransformerAttribute(string oldValue, string? newValue, MatchMode matchMode = MatchMode.Literal, MatchMethod matchMethod = MatchMethod.Full, MatchDisposition matchDisposition = MatchDisposition.Stop)
     {
         if (matchMode == MatchMode.Regex)
             _regex = new Regex(oldValue, RegexOptions.Compiled);
@@ -45,7 +45,7 @@ public class TemplateValueTransformerAttribute : Attribute
         _matchMethod = matchMethod;
     }
 
-    internal static string? Transform(TemplateValueTransformerAttribute[] transforms, string value)
+    internal static string? Transform(ValueTransformerAttribute[] transforms, string value)
     {
         var currentValue = value;
 

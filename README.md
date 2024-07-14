@@ -25,7 +25,7 @@ record ShowIpArp : ITemplate
 {
     public string Protocol { get; set; }
     public IPAddress IpAddress { get; set; }
-    [TemplateVariable(ThrowOnConversionFailure = false)]
+    [Variable(ThrowOnConversionFailure = false)]
     public long? Age { get; set; }
     public string MacAddress { get; set; }
     public string Type { get; set; }
@@ -85,7 +85,7 @@ class Example
 ## 'Value' Bindings
 Template TextFSM Values are automatically bound to similarly named public fields and properties within the type.
 
-By default the case and the '_' are ignored. This behavior can be changed by decorating the class with the TemplateRecordAttribute.
+By default the case and the '_' are ignored. This behavior can be changed by decorating the class with the TemplateAttribute.
 
 
 | Flag Name     | Description                                                    |
@@ -97,7 +97,7 @@ By default the case and the '_' are ignored. This behavior can be changed by dec
 
 For example to match using exact match logic and case-insensitive logic:
 ```csharp
-[TemplateRecord(MappingStrategy.Exact | IgnoreCase)]
+[Template(MappingStrategy.Exact | IgnoreCase)]
 record Test
 {
   ...
@@ -105,16 +105,16 @@ record Test
 ```
 
 ### Explicit 'Value' Binding
-A field or property can be explicitly bound using the TemplateVariableAttribute. Explicitly bound fields and properties take precedence over automatically bound fields and properties.
+A field or property can be explicitly bound using the VariableAttribute. Explicitly bound fields and properties take precedence over automatically bound fields and properties.
 ```csharp
-[TemplateVariable(Name = "MY_VALUE_NAME")]
+[Variable(Name = "MY_VALUE_NAME")]
 public long MagicNumber { get; set; }
 ```
 
 ### Ignoring a Field or Property
-A field or property can be ignored by setting the Ignore flag in the TemplateVariableAttribute.
+A field or property can be ignored by setting the Ignore flag in the VariableAttribute.
 ```csharp
-[TemplateVariable(Ignore = true)]
+[Variable(Ignore = true)]
 public long MagicNumber { get; set; }
 ```
 
@@ -123,7 +123,7 @@ If a type converter is not specified and the underlying type has a TryParse() or
 
 ### Setting an Explicit Type Converter
 ```csharp
-[TemplateVariable(TypeConverter = typeof(MyTypeConverter)]
+[Variable(TypeConverter = typeof(MyTypeConverter)]
 public long ValueField { get; set; }
 ```
 ### Type Conversion Failure
@@ -131,13 +131,13 @@ public long ValueField { get; set; }
 
 When the ThrowOnConversionFailure property is set to false, values that fail to parse are set to the type's default value. This value can be changed by setting the DefaultValue property. The default value is specified as a string value and will be converted using the associated type converter.
 ```csharp
-[TemplateVariable(ThrowOnConversionFailure=false)]
+[Variable(ThrowOnConversionFailure=false)]
 public long? Length { get; set; }
 
-[TemplateVariable(ThrowOnConversionFailure=false)]
+[Variable(ThrowOnConversionFailure=false)]
 public long MagicNumber { get; set; }
 
-[TemplateVariable(ThrowOnConversionFailure=false, DefaultValue="42")]
+[Variable(ThrowOnConversionFailure=false, DefaultValue="42")]
 public long Answer { get; set; }
 ```
 ### Built-In Type Converters
@@ -183,7 +183,7 @@ enum Animal
 ### Custom Type Converters
 A custom type converter can be set in the Converter property.
 ```csharp
-[TemplateVariable(Converter=typeof(MyConverter))]
+[Variable(Converter=typeof(MyConverter))]
 public long MagicNumber { get; set; }
 ```
 To create a custom type converter extend ValueConverter\<T\>.
@@ -209,7 +209,7 @@ When the TextFSM value definition has the 'List' option set, the underlying coll
 
 ### Setting Explicit Type Converters
 ```csharp
-[TemplateVariable(TypeConverter = typeof(ListCreator)]
+[Variable(TypeConverter = typeof(ListCreator)]
 public string Value { get; set; }
 ```
 ### Custom List Creator
@@ -230,12 +230,12 @@ class CommaSeparatedList : ListCreator<string,string>
 | GenericListCreator        | Converts TestFSM lists to a generic list          |
 | ReadOnlyCollectionCreator | Converts TestFSM lists to a read-only collection  |
 
-### Translations
-Before a value is converted and assigned, it can be translated from one value to another using the TemplateTranslationAttribute.
+### Transformers
+Before a value is converted and assigned, it can be transformed from one value to another using the TransformerAttribute.
 ```csharp
-[TemplateTranslation("old value", "new value")] // "old value" -> "new value"
-[TemplateTranslation("-", null)]                // Value is not set if the string value is null
-[TemplateTranslation("*", "")]                  // Value is not set if SkipEmpty is true (default) or empty if SkipEmpty is false
+[Transformer("old value", "new value")] // "old value" -> "new value"
+[Transformer("-", null)]                // Value is not set if the string value is null
+[Transformer("*", "")]                  // Value is not set if SkipEmpty is true (default) or empty if SkipEmpty is false
 public string Value { get; set; }
 ```
 

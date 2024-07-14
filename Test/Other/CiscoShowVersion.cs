@@ -73,7 +73,7 @@ namespace Test.Other
               ^Base [Ee]thernet MAC [Aa]ddress\s+:\s+${MAC_ADDRESS}
             """;
 
-        [TemplateVariable(Name = "VERSION")]
+        [Variable(Name = "VERSION")]
         public string Version { get; init; }
     }
 }
