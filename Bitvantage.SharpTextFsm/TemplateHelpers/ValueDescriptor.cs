@@ -52,7 +52,7 @@ public record ValueDescriptor
         Regex = regex;
 
         // if the metadata option is specified, parse the pattern as the metadata type and cache it
-        if (options.HasFlag(Option.Metadata))
+        if ((options & Option.Metadata) == Option.Metadata)
         {
             if (!Enum.TryParse(regex.ToString(), out Metadata metadata))
                 throw new ArgumentException($"The value '{regex}' could not be parsed into type {typeof(Metadata)}");

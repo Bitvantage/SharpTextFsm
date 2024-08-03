@@ -18,6 +18,7 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -72,7 +73,7 @@ public class Template
         """, RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace);
 
     private readonly TemplateState _globalTemplateState;
-    private readonly ImmutableDictionary<string, TemplateState> _states;
+    private readonly ReadOnlyDictionary<string, TemplateState> _states;
     private readonly Template? _template;
 
     private readonly TemplateOptions _templateOptions;
@@ -261,7 +262,7 @@ public class Template
             globalState = new TemplateState(this, "~Global") { Rules = ImmutableArray.Create<Rule>() };
 
         // set template values
-        _states = templateStates.ToImmutableDictionary();
+        _states = new ReadOnlyDictionary<string, TemplateState>(templateStates);
         _globalTemplateState = globalState;
 
         // in the reference implementation the 'Continue' action does not accept a state transition to ensure that the state machines is loop free
@@ -274,7 +275,7 @@ public class Template
 
     internal ImmutableHashSet<TemplateState> NaturalStates { get; }
     internal ImmutableList<TemplateState> NaturalStatesOrdered { get; }
-    public ImmutableDictionary<string, TemplateState> States => _template != null ? _template._states : _states;
+    public ReadOnlyDictionary<string, TemplateState> States => _template != null ? _template._states : _states;
     public ValueDescriptorCollection Values => _template != null ? _template._valueDescriptorCollection : _valueDescriptorCollection;
 
     public ExplainResult<T> Explain<T>(string text)
@@ -431,8 +432,7 @@ public class Template
                         if (explainResult != null)
                             matchStopwatch = Stopwatch.StartNew();
 
-                        // TODO: would be nice to know if the value was returned from cache or not.
-                        var match = matchCache.GetOrAdd(new MatchCacheKey(context.Text!, currentRule.Regex.ToString()), key => currentRule.Regex.Match(key.Text));
+                        var match = currentRule.Regex.Match(context.Text!);
 
                         matchStopwatch?.Stop();
 
@@ -461,15 +461,12 @@ public class Template
                         }
 
                         // extract matching value descriptor and store values
-                        foreach (var group in match.Groups.Where<Group>(group => group.Name.StartsWith("textfsm_")))
+                        foreach (Group captureGroup in match.Groups)
                         {
-                            var groupNameMatch = ValueGroupRegex.Match(group.Name);
-                            if (!groupNameMatch.Success)
+                            if(!currentRule.CaptureGroupMapping.TryGetValue(captureGroup.Name, out var valueDescriptor))
                                 continue;
 
-                            var groupName = groupNameMatch.Groups["name"].Value;
-
-                            values.SetValue(groupName, group);
+                            values.SetValue(valueDescriptor, captureGroup);
                         }
 
                         explainResult?.Add(new RuleEvaluation(activeTemplateState, currentRule, context.Text, context.Line, EvaluationDisposition.Matched, values.CurrentRow.Clone(), matchStopwatch!.Elapsed));

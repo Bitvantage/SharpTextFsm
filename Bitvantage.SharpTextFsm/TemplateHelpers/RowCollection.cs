@@ -102,11 +102,14 @@ public class RowCollection : IReadOnlyList<Row>
             return;
 
         // populate metadata
-        foreach (var valuePair in _valueDescriptorCollection.Where(item => item.Metadata != null))
+        foreach (var valuePair in _valueDescriptorCollection)
         {
+            if (valuePair.Metadata == null)
+                continue;
+
             var metadataValues = _metadata.Select(item => item.Get(valuePair.Metadata!.Value));
 
-            if (valuePair.Options.HasFlag(Option.List))
+            if ((valuePair.Options & Option.List) == Option.List)
                 CurrentRow.Add(valuePair.Name, metadataValues.ToList());
             else
                 CurrentRow.Add(valuePair.Name, metadataValues.Last());
@@ -114,14 +117,14 @@ public class RowCollection : IReadOnlyList<Row>
 
         // populate filldown values
         foreach (var filldown in _filldown)
-            if (_valueDescriptorCollection[filldown.Key].Options.HasFlag(Option.List))
+            if ((_valueDescriptorCollection[filldown.Key].Options & Option.List) == Option.List)
                 CurrentRow[filldown.Key] = new List<string>((List<string>)filldown.Value);
             else
                 CurrentRow.TryAdd(filldown.Key, filldown.Value);
 
         // skip record if all required fields are not set
-        foreach (var valuePair in _valueDescriptorCollection.Where(item => item.Options.HasFlag(Option.Required)))
-            if (!CurrentRow.ContainsKey(valuePair.Name))
+        foreach (var valuePair in _valueDescriptorCollection)
+            if ((valuePair.Options & Option.Required) == Option.Required && !CurrentRow.ContainsKey(valuePair.Name))
             {
                 Clear();
                 return;
@@ -133,7 +136,7 @@ public class RowCollection : IReadOnlyList<Row>
             if (CurrentRow.ContainsKey(valueDescriptor.Key))
                 continue;
 
-            if (valueDescriptor.Value.Options.HasFlag(Option.List))
+            if ((valueDescriptor.Value.Options & Option.List) == Option.List)
                 switch (_templateOptions.UnmatchedListHandling)
                 {
                     case UnmatchedHandling.Empty:
@@ -173,14 +176,9 @@ public class RowCollection : IReadOnlyList<Row>
         _metadata.Add(metadata.Clone());
     }
 
-    internal void SetValue(string key, Group value)
-    {
-        SetValue(_valueDescriptorCollection[key], value);
-    }
-
     internal void SetValue(ValueDescriptor valueDescriptor, Group value)
     {
-        if (valueDescriptor.Options.HasFlag(Option.List))
+        if ((valueDescriptor.Options & Option.List) == Option.List)
         {
             List<string> list;
             if (CurrentRow.TryGetValue(valueDescriptor.Name, out var listObject))
@@ -213,11 +211,11 @@ public class RowCollection : IReadOnlyList<Row>
             else
                 list!.Add(value.Value);
 
-            if (valueDescriptor.Options.HasFlag(Option.Filldown)) 
+            if ((valueDescriptor.Options & Option.Filldown) == Option.Filldown) 
                 _filldown[valueDescriptor.Name] = list;
 
             // populates upwards through the rows until there is a non-empty row
-            if (valueDescriptor.Options.HasFlag(Option.Fillup))
+            if ((valueDescriptor.Options & Option.Fillup) == Option.Fillup)
                 for (var rowIndex = Rows.Count - 1; rowIndex >= 0; rowIndex--) // go backwards through the rows
                     if (Rows[rowIndex].TryGetValue(valueDescriptor.Name, out var existingValue) == false || existingValue == null || ((List<string>)existingValue).Count == 0)
                         Rows[rowIndex][valueDescriptor.Name] = new List<string>(list); // set the value
@@ -228,11 +226,11 @@ public class RowCollection : IReadOnlyList<Row>
         {
             CurrentRow[valueDescriptor.Name] = value.Value;
 
-            if (valueDescriptor.Options.HasFlag(Option.Filldown))
+            if ((valueDescriptor.Options & Option.Filldown) == Option.Filldown)
                 _filldown[valueDescriptor.Name] = value.Value;
 
             // populates upwards through the rows until there is a non-empty row
-            if (valueDescriptor.Options.HasFlag(Option.Fillup))
+            if ((valueDescriptor.Options & Option.Fillup) == Option.Fillup)
                 for (var rowIndex = Rows.Count - 1; rowIndex >= 0; rowIndex--) // go backwards through the rows
                     if (Rows[rowIndex].TryGetValue(valueDescriptor.Name, out var existingValue) == false || existingValue == null || (string)existingValue == string.Empty)
                         Rows[rowIndex][valueDescriptor.Name] = value.Value; // set the value

@@ -136,13 +136,12 @@ internal class TypeSerializer<T>
         var usedExplicitNames = new HashSet<string>(namedFieldPairs.Select(item => item.Key));
 
         // get the mapping strategy from the type; or use the default value if not configured
-
         var mappingStrategies = typeof(T)
             .GetCustomAttribute<TemplateAttribute>() ?
             .MappingStrategies ?? MappingStrategy.Exact | MappingStrategy.IgnoreCase | MappingStrategy.SnakeCase;
 
         // if the MappingStrategy flags include Disabled; remove any other flags 
-        if (mappingStrategies.HasFlag(MappingStrategy.Disabled))
+        if ((mappingStrategies & MappingStrategy.Disabled) == MappingStrategy.Disabled)
             mappingStrategies = MappingStrategy.Disabled;
 
         var valueSetters = new Dictionary<ValueDescriptor, List<ValueSetter>>();

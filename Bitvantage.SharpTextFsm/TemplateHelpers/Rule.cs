@@ -17,6 +17,7 @@
 */
 
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
 using Bitvantage.SharpTextFsm.Exceptions;
@@ -101,6 +102,8 @@ public record StateFilter
 
 public record Rule
 {
+    internal readonly IReadOnlyDictionary<string, ValueDescriptor> CaptureGroupMapping;
+
     internal Rule(Template template, TemplateState state, string pattern, StateFilter stateFilterFilter, LineAction lineAction, RecordAction recordAction, RuleAction? action, ValueDescriptorCollection valueDescriptorCollection)
     {
         Template = template;
@@ -110,6 +113,8 @@ public record Rule
         RecordAction = recordAction;
         Action = action;
         Pattern = pattern;
+
+        var captureGroupMapping = new Dictionary<string, ValueDescriptor>();
 
         // expand the TextFSM ${variable} or $variable to a normal regex group with a prefix of 'textfsm_'
         var expandedPattern = valueDescriptorCollection.ValueDescriptorNamesRegex.Replace(pattern, match =>
@@ -126,8 +131,12 @@ public record Rule
                 // TODO: need to figure out how one escapes {}
                 return match.Value;
 
-            if (valueDescriptor.Options.HasFlag(Option.Regex))
+            if ((valueDescriptor.Options & Option.Regex) == Option.Regex)
                 return (valueDescriptor.Regex.ToString());
+
+            // keep a mapping between the capture group name and the value descriptor
+            // the lookup is a hot path for running a template
+            captureGroupMapping.TryAdd($"textfsm_{name}", valueDescriptorCollection[name]);
 
             return $"(?<textfsm_{name}>{valueDescriptor.Regex})";
         });
@@ -141,7 +150,7 @@ public record Rule
             throw new TemplateParseException($"Could not parse regular expression: {pattern}", ParseError.InvalidRegularExpression);
         }
 
-        // sanity check
+        CaptureGroupMapping = new ReadOnlyDictionary<string, ValueDescriptor>(captureGroupMapping);
     }
 
     public RuleAction? Action { get; }
