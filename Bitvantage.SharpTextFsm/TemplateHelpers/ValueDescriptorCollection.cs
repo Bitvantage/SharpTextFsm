@@ -1,17 +1,17 @@
 ﻿/*
    Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
-   
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU Affero General Public License for more details.
-   
+
    You should have received a copy of the GNU Affero General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -60,7 +60,7 @@ public class ValueDescriptorCollection : IReadOnlyList<ValueDescriptor>
         new ValueDefinition("_MAC_ADDRESS_QUAD_DOT", Option.Regex, "(?:[A-Fa-f0-9]{4}\\.[A-Fa-f0-9]{4}\\.[A-Fa-f0-9]{4})"),
 
         new ValueDefinition("_MAC_ADDRESS", Option.Regex, "(?:${_MAC_ADDRESS_DOUBLE_COLON}|${_MAC_ADDRESS_DOUBLE_DASH}|${_MAC_ADDRESS_DOUBLE_DOT}|${_MAC_ADDRESS_QUAD_COLON}|${_MAC_ADDRESS_QUAD_DOT})"),
-        
+
         new ValueDefinition("_IPV6", Option.Regex, "((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?"),
         new ValueDefinition("_IPV4", Option.Regex, "(?<![0-9])(?:(?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))(?![0-9])"),
         new ValueDefinition("_IP", Option.Regex, "(?:${_IPV6}|${_IPV4})"),
@@ -85,11 +85,13 @@ public class ValueDescriptorCollection : IReadOnlyList<ValueDescriptor>
     private static readonly Regex ValueRegex = new("(\\${(?<name>[a-zA-Z0-9_\\-]+?)})|(\\$(?<name>[a-zA-Z0-9_\\-]+(?=\\s|$)))", RegexOptions.Compiled);
 
     private readonly LookupList<string, ValueDescriptor> _listImplementation;
+    public static ReadOnlyDictionary<string, ValueDescriptor> RegexLibrary { get; }
 
     public ValueDescriptor this[string key] => _listImplementation[key];
 
     public IEnumerable<string> Keys => _listImplementation.Keys;
-    public static ReadOnlyDictionary<string, ValueDescriptor> RegexLibrary { get; }
+
+    internal Option OptionMask { get; } = Option.None;
 
     internal Regex ValueDescriptorNamesRegex { get; }
 
@@ -128,6 +130,10 @@ public class ValueDescriptorCollection : IReadOnlyList<ValueDescriptor>
         _listImplementation = new LookupList<string, ValueDescriptor>(descriptor => descriptor.Name, valueDescriptors.Values);
 
         ValueDescriptorNamesRegex = GenerateRegex();
+
+        // compute the combined option mask for all value descriptors
+        foreach (var valueDescriptor in this)
+            OptionMask |= valueDescriptor.Options;
     }
 
     IEnumerator IEnumerable.GetEnumerator()

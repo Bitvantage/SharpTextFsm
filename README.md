@@ -417,7 +417,6 @@ The metadata pattern is a value from the below list and not a regular expression
 | Line           | The current line number            |
 | Text           | The current text                   |
 | State          | The current state                  |
-| PreviousState  | The previous state                 |
 | RuleIndex      | The index of the rule that matched |
 
 

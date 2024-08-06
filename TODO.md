@@ -2,17 +2,6 @@
     * Debug and build templates
     * Generate records
 * PowerShell cmdlets similar to how parser.py works
-* Optimize the regular expression matching
-    * There is a non-trivial amount of overhead whenever we ask for a Regex.Match().
-    * It should be possible to combine all of the regular expressions in a given state into a single regular expression
-    * The rule ID would need to be encoded into the group name so that the matching rule could be re-associated
-    * Rules that have a '\-> Continue' without a state change would require additional merged regular expressions that start immediately after the '\->' continue rule
-    * Global rules with matching state filters would be included
-    * An encoded rule may look something like:
-    \
-    ```regex
-    ((?>(?<textfsm_global_rule_1>^section))|(?>(?<textfsm_rule_1>^line))|(?>(?<textfsm_rule_2>^a|b))|(?>(?<textfsm_rule_3>^\d+)))
-    ```
 * Add external branching control to TextFSM templates
 \
 There are cases where it would be much cleaner to provide a single template that takes external input to influence the execution path

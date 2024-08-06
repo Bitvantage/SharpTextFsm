@@ -1,17 +1,17 @@
 ﻿/*
    Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
-   
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU Affero General Public License for more details.
-   
+
    You should have received a copy of the GNU Affero General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -75,7 +75,7 @@ internal class TypeSerializer<T>
     }
 
     /// <summary>
-    /// generates a delegate that takes a string value and sets the field to the value
+    ///     generates a delegate that takes a string value and sets the field to the value
     /// </summary>
     /// <param name="valueDescriptorCollection"></param>
     /// <returns></returns>
@@ -107,14 +107,14 @@ internal class TypeSerializer<T>
         var namedFieldPairs = Enumerable.Empty<NamedFieldPair>()
             .Concat(namedFields)
             .Concat(namedProperties)
-            .Where(item=>item.Configuration?.Name != null)
+            .Where(item => item.Configuration?.Name != null)
             .ToLookup(item => item.Name, item => item);
 
         var configuredAndUnnamedMembers = Enumerable.Empty<NamedFieldPair>()
             .Concat(namedFields)
             .Concat(namedProperties)
-            .Where(item=>item.Configuration?.Name == null)
-            .Select(item=>item.MemberInfo)
+            .Where(item => item.Configuration?.Name == null)
+            .Select(item => item.MemberInfo)
             .ToHashSet();
 
         var unnamedFields = typeof(T)
@@ -133,11 +133,9 @@ internal class TypeSerializer<T>
             .Concat(unnamedProperties)
             .ToList();
 
-        var usedExplicitNames = new HashSet<string>(namedFieldPairs.Select(item => item.Key));
-
         // get the mapping strategy from the type; or use the default value if not configured
         var mappingStrategies = typeof(T)
-            .GetCustomAttribute<TemplateAttribute>() ?
+            .GetCustomAttribute<TemplateAttribute>()?
             .MappingStrategies ?? MappingStrategy.Exact | MappingStrategy.IgnoreCase | MappingStrategy.SnakeCase;
 
         // if the MappingStrategy flags include Disabled; remove any other flags 
@@ -145,7 +143,7 @@ internal class TypeSerializer<T>
             mappingStrategies = MappingStrategy.Disabled;
 
         var valueSetters = new Dictionary<ValueDescriptor, List<ValueSetter>>();
-        var unmappedValueDescriptors = valueDescriptorCollection.Values.Where(item=>item.Options != Option.Regex).ToHashSet();
+        var unmappedValueDescriptors = valueDescriptorCollection.Values.Where(item => item.Options != Option.Regex).ToHashSet();
 
         // go through all fields and properties with configuration attribute and a name defined
         foreach (var fieldPairs in namedFieldPairs)
@@ -157,18 +155,20 @@ internal class TypeSerializer<T>
                 // create a value setter for each member
                 var valueDescriptorSetters = new List<ValueSetter>();
                 foreach (var namedFieldPair in fieldPairs)
-                    if (ValueSetter.TryCreate(valueDescriptor, namedFieldPair.Configuration ?? VariableAttribute.Default, namedFieldPair.TemplateTranslations?? new ValueTransformerAttribute[] { }, namedFieldPair.MemberInfo, namedFieldPair.UnderlyingType, out var valueSetter))
+                    if (ValueSetter.TryCreate(valueDescriptor, namedFieldPair.Configuration ?? VariableAttribute.Default, namedFieldPair.TemplateTranslations ?? new ValueTransformerAttribute[] { }, namedFieldPair.MemberInfo, namedFieldPair.UnderlyingType, out var valueSetter))
                         valueDescriptorSetters.Add(valueSetter);
                     else
                         throw new ValueConverterCreationException($"Could not create a value converter for {namedFieldPair.UnderlyingType}.{namedFieldPair.MemberInfo.Name}");
 
                 valueSetters.Add(valueDescriptor, valueDescriptorSetters);
-                
+
                 // remove the value descriptor from the mapping pool since it has already been mapped
                 unmappedValueDescriptors.Remove(valueDescriptor);
             }
             else
+            {
                 throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(VariableAttribute)}: {fieldPairs.Key}");
+            }
         }
 
         // go through each possible mapping strategy combination
@@ -176,10 +176,10 @@ internal class TypeSerializer<T>
         foreach (var mappingStrategy in new[] { MappingStrategy.Exact, MappingStrategy.IgnoreCase, MappingStrategy.SnakeCase, MappingStrategy.IgnoreCase | MappingStrategy.SnakeCase })
         {
             // if the mapping strategy combination has not been configured then skip it
-            if((mappingStrategies & mappingStrategy) != mappingStrategy)
+            if ((mappingStrategies & mappingStrategy) != mappingStrategy)
                 continue;
 
-            foreach (var valueDescriptor in unmappedValueDescriptors.OrderBy(item=>item.Name).ToList())
+            foreach (var valueDescriptor in unmappedValueDescriptors.OrderBy(item => item.Name).ToList())
             {
                 // attempt to match the name using the current mapping strategy
                 var unnamedFieldPair = mappingStrategy switch
@@ -194,7 +194,7 @@ internal class TypeSerializer<T>
                 // if there is a matching pair; generate a setter
                 if (unnamedFieldPair != null)
                 {
-                    if (ValueSetter.TryCreate(valueDescriptor, unnamedFieldPair.Configuration ?? VariableAttribute.Default, unnamedFieldPair.TemplateTranslations ?? new ValueTransformerAttribute[]{}, unnamedFieldPair.MemberInfo, unnamedFieldPair.UnderlyingType, out var valueSetter))
+                    if (ValueSetter.TryCreate(valueDescriptor, unnamedFieldPair.Configuration ?? VariableAttribute.Default, unnamedFieldPair.TemplateTranslations ?? new ValueTransformerAttribute[] { }, unnamedFieldPair.MemberInfo, unnamedFieldPair.UnderlyingType, out var valueSetter))
                         valueSetters.Add(valueDescriptor, new List<ValueSetter> { valueSetter });
 
                     unmappedValueDescriptors.Remove(valueDescriptor);
@@ -206,7 +206,7 @@ internal class TypeSerializer<T>
 
         // check if any field or property values that are set with a configuration attribute that have no name have been missed
         if (configuredAndUnnamedMembers.Any())
-            throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(VariableAttribute)}: {string.Join(", ", configuredAndUnnamedMembers.Select(item=>item.Name))}");
+            throw new TemplateMapException($"Failed to bind explicitly defined template VALUES specified in the {nameof(VariableAttribute)}: {string.Join(", ", configuredAndUnnamedMembers.Select(item => item.Name))}");
 
         return valueSetters;
     }
@@ -226,7 +226,7 @@ internal class TypeSerializer<T>
             // set values
             foreach (var setter in _setters)
             {
-                if(!row.TryGetValue(setter.Key.Name, out var rawValue))
+                if (!row.TryGetValue(setter.Key.Name, out var rawValue))
                     continue;
 
                 // skip setting null values
@@ -250,7 +250,9 @@ internal class TypeSerializer<T>
                     yield return instance;
             }
             else
+            {
                 yield return instance;
+            }
         }
     }
 

@@ -1,23 +1,22 @@
 ﻿/*
    Bitvantage.SharpTextFsm
    Copyright (C) 2024 Michael Crino
-   
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU Affero General Public License for more details.
-   
+
    You should have received a copy of the GNU Affero General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
 using Bitvantage.SharpTextFsm.Exceptions;
@@ -84,6 +83,10 @@ public record ChangeStateAction(TemplateState NewState) : RuleAction
 
 public record StateFilter
 {
+    public ImmutableHashSet<TemplateState> EffectiveStates { get; }
+    public bool Invert { get; }
+    public ImmutableHashSet<TemplateState> States { get; }
+
     public StateFilter(IEnumerable<TemplateState>? states, bool invert, ImmutableHashSet<TemplateState> allStates)
     {
         Invert = invert;
@@ -94,15 +97,20 @@ public record StateFilter
         // calculate the effective state, such that if the invert bit is set then use all states not specified
         EffectiveStates = invert ? allStates.Except(States).ToImmutableHashSet() : States;
     }
-
-    public ImmutableHashSet<TemplateState> EffectiveStates { get; }
-    public bool Invert { get; }
-    public ImmutableHashSet<TemplateState> States { get; }
 }
 
 public record Rule
 {
-    internal readonly IReadOnlyDictionary<string, ValueDescriptor> CaptureGroupMapping;
+    internal readonly ImmutableArray<KeyValuePair<int, ValueDescriptor>> CaptureGroupMapping;
+
+    public RuleAction? Action { get; }
+    public LineAction LineAction { get; init; } = LineAction.Next;
+    public string Pattern { get; init; }
+    public RecordAction RecordAction { get; init; } = RecordAction.NoRecord;
+    public Regex Regex { get; init; }
+    public TemplateState State { get; }
+    public StateFilter StateFilter { get; }
+    public Template Template { get; }
 
     internal Rule(Template template, TemplateState state, string pattern, StateFilter stateFilterFilter, LineAction lineAction, RecordAction recordAction, RuleAction? action, ValueDescriptorCollection valueDescriptorCollection)
     {
@@ -114,7 +122,7 @@ public record Rule
         Action = action;
         Pattern = pattern;
 
-        var captureGroupMapping = new Dictionary<string, ValueDescriptor>();
+        var captureGroups = new Dictionary<string, ValueDescriptor>();
 
         // expand the TextFSM ${variable} or $variable to a normal regex group with a prefix of 'textfsm_'
         var expandedPattern = valueDescriptorCollection.ValueDescriptorNamesRegex.Replace(pattern, match =>
@@ -132,11 +140,11 @@ public record Rule
                 return match.Value;
 
             if ((valueDescriptor.Options & Option.Regex) == Option.Regex)
-                return (valueDescriptor.Regex.ToString());
+                return valueDescriptor.Regex.ToString();
 
             // keep a mapping between the capture group name and the value descriptor
             // the lookup is a hot path for running a template
-            captureGroupMapping.TryAdd($"textfsm_{name}", valueDescriptorCollection[name]);
+            captureGroups.TryAdd($"textfsm_{name}", valueDescriptorCollection[name]);
 
             return $"(?<textfsm_{name}>{valueDescriptor.Regex})";
         });
@@ -150,24 +158,22 @@ public record Rule
             throw new TemplateParseException($"Could not parse regular expression: {pattern}", ParseError.InvalidRegularExpression);
         }
 
-        CaptureGroupMapping = new ReadOnlyDictionary<string, ValueDescriptor>(captureGroupMapping);
-    }
+        var captureGroupMapping = new List<KeyValuePair<int, ValueDescriptor>>();
+        foreach (var valueDescriptor in captureGroups)
+        {
+            var captureGroupNumber = Regex.GroupNumberFromName(valueDescriptor.Key);
+            captureGroupMapping.Add(new KeyValuePair<int, ValueDescriptor>(captureGroupNumber, valueDescriptor.Value));
+        }
 
-    public RuleAction? Action { get; }
-    public LineAction LineAction { get; init; } = LineAction.Next;
-    public Regex Regex { get; init; }
-    public string Pattern { get; init; }
-    public RecordAction RecordAction { get; init; } = RecordAction.NoRecord;
-    public Template Template { get; }
-    public TemplateState State { get; }
-    public StateFilter StateFilter { get; }
+        CaptureGroupMapping = captureGroupMapping.ToImmutableArray();
+    }
 
     public override string ToString()
     {
         var sb = new StringBuilder();
 
         sb.Append(" ");
-        if (!StateFilter.EffectiveStates.SetEquals(Template.NaturalStates))
+        if (!StateFilter.EffectiveStates.SetEquals(Template.UserStates))
         {
             sb.Append("[");
             if (StateFilter.Invert)
