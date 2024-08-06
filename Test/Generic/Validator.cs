@@ -51,7 +51,7 @@ namespace Test.Generic
                 F600
                 """;
 
-            var results = template.Parse<Validator>(data).ToList();
+            var results = template.Run<Validator>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(2));
             Assert.That(results[0].ValueProperty, Is.EqualTo(100));

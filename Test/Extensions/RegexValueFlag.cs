@@ -39,7 +39,7 @@ namespace Test.Extensions
                 10000
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(0));
         }
@@ -60,7 +60,7 @@ namespace Test.Extensions
                     10000
                     """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["X"], Is.EqualTo("10000"));
@@ -82,7 +82,7 @@ namespace Test.Extensions
                 12345
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["X"], Is.EqualTo("45"));
@@ -105,7 +105,7 @@ namespace Test.Extensions
                 123456
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["X"], Is.EqualTo("123456"));
@@ -126,7 +126,7 @@ namespace Test.Extensions
                 123456
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["X"], Is.EqualTo("123456"));
@@ -147,7 +147,7 @@ namespace Test.Extensions
                 10.0.0.1 192.160.0.1
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["X"], Is.EqualTo("10.0.0.1"));
@@ -168,7 +168,7 @@ namespace Test.Extensions
                 XXX
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["_IP"], Is.EqualTo("XXX"));

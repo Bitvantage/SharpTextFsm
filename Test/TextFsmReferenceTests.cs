@@ -1164,7 +1164,7 @@ namespace Test
 
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(0));
         }
@@ -1188,7 +1188,7 @@ namespace Test
 
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(3));
             Assert.That(results[0]["boo"], Is.EqualTo("Matching text"));
@@ -1213,7 +1213,7 @@ namespace Test
                 Matching text
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["boo"], Is.EqualTo("Matching text"));
@@ -1236,7 +1236,7 @@ namespace Test
                 And again
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(2));
             Assert.That(results[0]["boo"], Is.EqualTo("Matching text"));
@@ -1262,7 +1262,7 @@ namespace Test
                 one
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["boo"], Is.EqualTo("one"));
@@ -1289,7 +1289,7 @@ namespace Test
                 one
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(2));
             Assert.That(results[0]["boo"], Is.EqualTo("one"));
@@ -1318,7 +1318,7 @@ namespace Test
                 one
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(2));
             Assert.That(results[0]["boo"], Is.EqualTo("one"));
@@ -1343,7 +1343,7 @@ namespace Test
 
             var data = string.Empty;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(0));
         }
@@ -1371,7 +1371,7 @@ namespace Test
                 twO
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["boo"], Is.EqualTo("onE"));
@@ -1395,7 +1395,7 @@ namespace Test
                 two
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0]["boo"], Is.EqualTo(""));
@@ -1419,7 +1419,7 @@ namespace Test
                 on0
                 """;
 
-            var results = template.Parse(data);
+            var results = template.Run(data);
 
             Assert.That(results.Count, Is.EqualTo(2));
             Assert.That(results[0]["boo"], Is.EqualTo("one"));
@@ -1444,7 +1444,7 @@ namespace Test
                 one
                 """;
 
-            var exception = Assert.Throws<TemplateErrorException>(() => template.Parse(data));
+            var exception = Assert.Throws<TemplateErrorException>(() => template.Run(data));
         }
 
         [Test]
@@ -1463,7 +1463,7 @@ namespace Test
                 one
                 """;
 
-            var exception = Assert.Throws<TemplateErrorException>(() => template.Parse(data));
+            var exception = Assert.Throws<TemplateErrorException>(() => template.Run(data));
             Assert.That(exception.Text, Is.EqualTo("one"));
             Assert.That(exception.Error.Message, Is.EqualTo("Hello World"));
             Assert.That(exception.Line, Is.EqualTo(1));
@@ -1506,7 +1506,7 @@ namespace Test
                 tw0
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(2));
 
@@ -1537,7 +1537,7 @@ namespace Test
                 on1
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(3));
 
@@ -1571,7 +1571,7 @@ namespace Test
                 tw2
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(1));
 
@@ -1610,7 +1610,7 @@ namespace Test
 
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             //FSM Table:
             //['foo', 'name']
@@ -1671,7 +1671,7 @@ namespace Test
                 one
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(template.States["Start"].Rules.Length, Is.EqualTo(1));
             Assert.That(template.States["Start"].Rules[0].Pattern, Is.EqualTo("^$boo"));
@@ -1702,7 +1702,7 @@ namespace Test
                 one
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(template.States["Start"].Rules.Length, Is.EqualTo(1));
             Assert.That(template.States["Start"].Rules[0].Pattern, Is.EqualTo("^$boo"));
@@ -1728,7 +1728,7 @@ namespace Test
                 Matching text
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0]["boo"], Is.EqualTo("Matching text"));
@@ -1750,7 +1750,7 @@ namespace Test
                 Matching text
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(0));
         }
@@ -1769,7 +1769,7 @@ namespace Test
                 Matching text
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0]["boo"], Is.EqualTo("Matching text"));
@@ -1791,7 +1791,7 @@ namespace Test
                 Matching text B
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(0));
         }
@@ -1812,7 +1812,7 @@ namespace Test
                 Matching text B
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(0));
         }
@@ -1832,7 +1832,7 @@ namespace Test
                 Matching text B
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0]["boo"], Is.EqualTo("Matching text A"));
@@ -1854,7 +1854,7 @@ namespace Test
                 Matching text B
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0]["boo"], Is.EqualTo("Matching text A"));
@@ -1892,7 +1892,7 @@ namespace Test
 
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(3));
             Assert.That(result[0]["boo"], Is.EqualTo("f"));
@@ -1919,7 +1919,7 @@ namespace Test
                 two
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0]["boo"], Is.EqualTo("one"));
@@ -1946,7 +1946,7 @@ namespace Test
                 3 -- B3
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(3));
 

@@ -59,12 +59,12 @@ namespace Test.Other
 
             var template = new Template(((ITemplate)new NullablePropertyTemplate()).TextFsmTemplate);
 
-            var result = template.Parse(_data).ToDynamic().ToList();
+            var result = template.Run(_data).ToDynamic().ToList();
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0].A_NUMBER_MAYBE, Is.Empty);
             Assert.That(result[0].A_LETTER_ALWAYS, Is.EqualTo("b"));
 
-            var genericResult = genericTemplate.Parse<NullablePropertyTemplate>(_data).ToList();
+            var genericResult = genericTemplate.Run<NullablePropertyTemplate>(_data).ToList();
             Assert.That(genericResult.Count, Is.EqualTo(1));
             Assert.That(genericResult[0].Number, Is.Null);
             Assert.That(genericResult[0].Letter, Is.EqualTo("b"));

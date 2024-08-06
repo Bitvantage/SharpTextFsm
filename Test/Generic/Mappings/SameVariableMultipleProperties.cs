@@ -48,7 +48,7 @@ namespace Test.Generic.Mappings
                 P100
                 """;
 
-            var results = template.Parse<SameVariableMultipleProperties>(data).ToList();
+            var results = template.Run<SameVariableMultipleProperties>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].ValueProperty1, Is.EqualTo(100));

@@ -81,7 +81,7 @@ namespace Test.Other.ConverterTemplates
         {
             var genericTemplate = Template.FromType<GenericParseConverterTemplateTest>();
 
-            var genericResult = genericTemplate.Parse<GenericParseConverterTemplateTest>(_data);
+            var genericResult = genericTemplate.Run<GenericParseConverterTemplateTest>(_data);
 
             Assert.That(genericResult.Count, Is.EqualTo(1));
 

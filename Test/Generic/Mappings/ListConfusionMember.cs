@@ -44,7 +44,7 @@ namespace Test.Generic.Mappings
                 F200
                 """;
 
-            var results = template.Parse<ListConfusionMember>(data).ToList();
+            var results = template.Run<ListConfusionMember>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].ValueProperty, Is.EqualTo(null));

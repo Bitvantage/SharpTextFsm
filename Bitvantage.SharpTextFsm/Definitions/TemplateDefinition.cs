@@ -41,7 +41,7 @@ namespace Bitvantage.SharpTextFsm.Definitions
             List<TextFsmTemplateParser> textFsmTemplateRows;
             try
             {
-                textFsmTemplateRows = TextFsmTemplateParser.Instance.Parse<TextFsmTemplateParser>(textFsmTemplate).ToList();
+                textFsmTemplateRows = TextFsmTemplateParser.Instance.Run<TextFsmTemplateParser>(textFsmTemplate).ToList();
             }
             catch (TemplateErrorException templateErrorException)
             {

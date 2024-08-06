@@ -69,7 +69,7 @@ namespace Test.Other
 
             var template = new Template(((ITemplate)new UnpopulatedListTemplate()).TextFsmTemplate);
 
-            var result = template.Parse(_data).ToDynamic().ToList();
+            var result = template.Run(_data).ToDynamic().ToList();
 
             Assert.That(result.Count, Is.EqualTo(2));
             Assert.That(result[0].NUMBER, Is.EqualTo("1"));
@@ -80,7 +80,7 @@ namespace Test.Other
             Assert.That(result[1].LETTERS, Is.EqualTo(new[] { "X", "Y", "Z" }));
             Assert.That(result[1].EMPTY_LIST, Is.Empty);
 
-            var genericResult = genericTemplate.Parse<UnpopulatedListTemplate>(_data).ToList();
+            var genericResult = genericTemplate.Run<UnpopulatedListTemplate>(_data).ToList();
 
             Assert.That(genericResult.Count, Is.EqualTo(2));
             Assert.That(genericResult[0].Number, Is.EqualTo(1));

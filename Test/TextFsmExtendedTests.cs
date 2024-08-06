@@ -55,7 +55,7 @@ internal class TextFsmExtendedTests
             onf
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(2));
 
@@ -102,7 +102,7 @@ internal class TextFsmExtendedTests
             onf
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(2));
 
@@ -147,7 +147,7 @@ internal class TextFsmExtendedTests
             onf
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(2));
 
@@ -212,7 +212,7 @@ internal class TextFsmExtendedTests
             $on0
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(1));
 
@@ -238,7 +238,7 @@ internal class TextFsmExtendedTests
             two
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(2));
 
@@ -267,7 +267,7 @@ internal class TextFsmExtendedTests
             two
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(2));
 
@@ -309,7 +309,7 @@ internal class TextFsmExtendedTests
             F34
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result[0]["boo"], Is.EqualTo("one"));
         Assert.That(result[0]["hoo"], Is.EqualTo(string.Empty));
@@ -372,7 +372,7 @@ internal class TextFsmExtendedTests
             F34
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(7));
 
@@ -436,7 +436,7 @@ internal class TextFsmExtendedTests
             F34
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result[0]["boo"], Is.EqualTo("one"));
         Assert.That(result[0]["hoo"], Is.EqualTo(string.Empty));
@@ -511,7 +511,7 @@ internal class TextFsmExtendedTests
             F34
             """;
 
-        var result = template.Parse(data);
+        var result = template.Run(data);
 
         Assert.That(result.Count, Is.EqualTo(7));
 

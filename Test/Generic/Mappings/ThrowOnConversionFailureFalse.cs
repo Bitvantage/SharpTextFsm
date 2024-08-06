@@ -48,7 +48,7 @@ namespace Test.Generic.Mappings
                 F200Y
                 """;
 
-            var results = template.Parse<ThrowOnConversionFailureFalse>(data).ToList();
+            var results = template.Run<ThrowOnConversionFailureFalse>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].ValueProperty, Is.EqualTo(null));

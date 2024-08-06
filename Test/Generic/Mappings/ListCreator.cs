@@ -45,7 +45,7 @@ namespace Test.Generic.Mappings
                 400
                 """;
 
-            var results = template.Parse<ListCreator>(data).ToList();
+            var results = template.Run<ListCreator>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].ValueProperty, Is.EqualTo("100,200,300,400"));

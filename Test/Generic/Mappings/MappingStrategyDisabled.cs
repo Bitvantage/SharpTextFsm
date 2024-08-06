@@ -47,7 +47,7 @@ namespace Test.Generic.Mappings
                 F200
                 """;
 
-            var results = template.Parse<MappingStrategyDisabled>(data).ToList();
+            var results = template.Run<MappingStrategyDisabled>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].ValueProperty, Is.EqualTo(100));

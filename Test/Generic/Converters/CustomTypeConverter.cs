@@ -50,7 +50,7 @@ namespace Test.Generic.Converters
                 F200
                 """;
 
-            var results = template.Parse<CustomTypeConverter>(data).ToList();
+            var results = template.Run<CustomTypeConverter>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
 

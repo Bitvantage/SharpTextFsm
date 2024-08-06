@@ -300,7 +300,7 @@ public class Template
             return _template.Explain(text);
 
         var explainResult = new ExplainResult();
-        Parse(text, explainResult);
+        Run(text, explainResult);
 
         return explainResult;
     }
@@ -328,22 +328,22 @@ public class Template
         return new Template(iTemplate.TextFsmTemplate, templateOptions);
     }
 
-    internal RowCollection Parse(string text, ExplainResult? explainResult = null)
+    internal RowCollection Run(string text, ExplainResult? explainResult = null)
     {
         return ParseInternal(new StringReader(text), explainResult);
     }
 
-    public IEnumerable<T> Parse<T>(string text)
+    public IEnumerable<T> Run<T>(string text)
     {
-        return Parse<T>(text, null);
+        return Run<T>(text, null);
     }
 
-    public IEnumerable<T> Parse<T>(string text, object? state)
+    public IEnumerable<T> Run<T>(string text, object? state)
     {
         if (_template != null)
-            return _template.Parse<T>(text, state);
+            return _template.Run<T>(text, state);
 
-        var valueCollection = Parse(text, null);
+        var valueCollection = Run(text, null);
 
         var typeSerializer = (TypeSerializer<T>)_typeSerializerCache.GetOrAdd(typeof(T), _ => new TypeSerializer<T>(_valueDescriptorCollection));
         var values = typeSerializer.Serialize(valueCollection, state);
@@ -351,12 +351,12 @@ public class Template
         return values;
     }
 
-    public RowCollection Parse(string text)
+    public RowCollection Run(string text)
     {
         if (_template != null)
-            return _template.Parse(text);
+            return _template.Run(text);
 
-        var valueCollection = Parse(text, null);
+        var valueCollection = Run(text, null);
 
         return valueCollection;
     }

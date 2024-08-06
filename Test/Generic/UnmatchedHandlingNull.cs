@@ -44,7 +44,7 @@ namespace Test.Generic
                 F200
                 """;
 
-            var results = template.Parse<UnmatchedHandlingNull>(data).ToList();
+            var results = template.Run<UnmatchedHandlingNull>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(2));
 

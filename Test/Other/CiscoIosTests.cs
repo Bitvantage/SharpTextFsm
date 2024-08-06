@@ -70,7 +70,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -168,7 +168,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -241,7 +241,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -288,7 +288,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -338,7 +338,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -389,7 +389,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -436,7 +436,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -486,7 +486,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -512,7 +512,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -543,7 +543,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -633,7 +633,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -681,7 +681,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }
@@ -795,7 +795,7 @@ namespace Test.Other
 
             var template = Template.FromType<CiscoShowVersion>();
 
-            var r = template.Parse(data);
+            var r = template.Run(data);
         }
 
         [Test]
@@ -842,7 +842,7 @@ namespace Test.Other
             var template = new Template(templateText);
 
             var sw = Stopwatch.StartNew();
-            var values = template.Parse<CiscoShowIpRouteOspfRecord>(data);
+            var values = template.Run<CiscoShowIpRouteOspfRecord>(data);
 
             sw.Stop();
             Assert.Pass();
@@ -892,7 +892,7 @@ namespace Test.Other
 
             var template = new Template(templateText);
 
-            var values = template.Parse(data);
+            var values = template.Run(data);
 
             Assert.Pass();
         }

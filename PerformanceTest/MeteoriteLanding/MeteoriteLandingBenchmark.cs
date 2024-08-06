@@ -37,14 +37,14 @@ public class MeteoriteLandingBenchmark
     [Benchmark]
     public void MeteoriteLandingTyped()
     {
-        var records = Template.Parse<MeteoriteLandingRecord>(MeteoriteLandingData).ToList();
+        var records = Template.Run<MeteoriteLandingRecord>(MeteoriteLandingData).ToList();
     }
 
     [IterationCount(20)]
     [Benchmark]
     public void MeteoriteLandingRowCollection()
     {
-        var records = Template.Parse(MeteoriteLandingData).ToList();
+        var records = Template.Run(MeteoriteLandingData).ToList();
     }
 
 

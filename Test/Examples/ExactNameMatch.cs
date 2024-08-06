@@ -66,7 +66,7 @@ namespace Test.Examples
                 Internet  10.0.0.0             -              aabb.cc03.8200    SRP-A
                 """;
 
-            var results = template.Parse<ShowIpArp>(data);
+            var results = template.Run<ShowIpArp>(data);
 
             Assert.That(results.Count, Is.EqualTo(7));
 

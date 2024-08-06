@@ -44,7 +44,7 @@ namespace Test.Generic.Mappings
                 F200
                 """;
 
-            var results = template.Parse<MultipleImplicitMatchesDifferentRank>(data).ToList();
+            var results = template.Run<MultipleImplicitMatchesDifferentRank>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].Value_Property_, Is.EqualTo(default(long)));

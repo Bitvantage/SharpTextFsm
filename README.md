@@ -68,7 +68,7 @@ class Example
             """;
 
         var template = Template.FromType<ShowIpArp>();
-        var results = template.Parse<ShowIpArp>(data).ToList();
+        var results = template.Run<ShowIpArp>(data).ToList();
     }
 }
 ```
@@ -424,7 +424,7 @@ The metadata pattern is a value from the below list and not a regular expression
 To produce an untyped result set similar to the reference implementation of TextFSM.
 
 ```csharp
-var results = template.Parse(string data)
+var results = template.Run(string data)
 ```
 
 The results will be a list of rows that contain either a string value or an array of string values.
@@ -433,7 +433,7 @@ The results will be a list of rows that contain either a string value or an arra
 To produce an untyped dynamic result set.
 
 ```csharp
-var results = template.Parse(string data).ToDynamic()
+var results = template.Run(string data).ToDynamic()
 ```
 # Troubleshooting
 ## Explain() Function

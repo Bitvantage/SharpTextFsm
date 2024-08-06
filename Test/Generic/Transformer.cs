@@ -61,7 +61,7 @@ namespace Test.Generic
                 P204
                 """;
 
-            var results = template.Parse<Transformer>(data).ToList();
+            var results = template.Run<Transformer>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(5));
 

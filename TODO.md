@@ -16,6 +16,4 @@ There are cases where it would be much cleaner to provide a single template that
         * For example MyState%VendorX
     * Presumably it would not make sense to allow prepend and append with replace
     * For loop prevention, all of the base state names would be merged together and evaluated just like they are today
-    * Rename the Parse() function to Run()?
-        * A TextFSM template is parsed, once parsed text is run through the template?
     * The process of converting a result set to a typed result set could be multi-threaded.

@@ -61,7 +61,7 @@ namespace Test.Extensions
                   Sub-Sub-Section 6
                 """;
 
-            var result = template.Parse(data);
+            var result = template.Run(data);
 
             Assert.That(result.Count, Is.EqualTo(2));
 

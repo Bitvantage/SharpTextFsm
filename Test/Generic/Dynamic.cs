@@ -42,7 +42,7 @@ namespace Test.Generic
                 """;
 
             var results = template
-                .Parse(data)
+                .Run(data)
                 .ToDynamic()
                 .ToList();
 

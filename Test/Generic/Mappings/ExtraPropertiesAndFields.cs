@@ -50,7 +50,7 @@ namespace Test.Generic.Mappings
                 F200
                 """;
 
-            var results = template.Parse<ExtraPropertiesAndFields>(data).ToList();
+            var results = template.Run<ExtraPropertiesAndFields>(data).ToList();
 
             Assert.That(results.Count, Is.EqualTo(1));
             Assert.That(results[0].ValueProperty, Is.EqualTo(100));

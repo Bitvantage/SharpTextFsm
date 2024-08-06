@@ -49,7 +49,7 @@ namespace Test.Generic.Mappings
                 F200Y
                 """;
 
-            Assert.Throws<TemplateTypeConversionException>(() => template.Parse<ThrowOnConversionFailureTrue>(data).ToList());
+            Assert.Throws<TemplateTypeConversionException>(() => template.Run<ThrowOnConversionFailureTrue>(data).ToList());
         }
     }
 

@@ -49,7 +49,7 @@ namespace Test.Generic.Mappings
                 F200
                 """;
 
-            Assert.Catch<TemplateMapException>(()=>template.Parse<RawRowWrongFieldType>(data));
+            Assert.Catch<TemplateMapException>(()=>template.Run<RawRowWrongFieldType>(data));
         }
     }
 

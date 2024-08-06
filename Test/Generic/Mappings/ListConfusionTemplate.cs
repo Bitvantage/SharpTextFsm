@@ -45,7 +45,7 @@ namespace Test.Generic.Mappings
                 F200
                 """;
 
-           Assert.Catch<TemplateMapException>(() => template.Parse<MappingStrategyDisabled>(data));
+           Assert.Catch<TemplateMapException>(() => template.Run<MappingStrategyDisabled>(data));
         }
     }
 
