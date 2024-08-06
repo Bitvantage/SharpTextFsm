@@ -16,9 +16,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>cli;parser;parsing;state-machine;regex;textFSM</PackageTags>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
-	<VersionPrefix>1.1.0</VersionPrefix>
-	<FileVersion>1.1.0</FileVersion>
-	<AssemblyVersion>1.1.0</AssemblyVersion>
+	<VersionPrefix>1.3.0</VersionPrefix>
+	<FileVersion>1.3.0</FileVersion>
+	<AssemblyVersion>1.3.0</AssemblyVersion>
 	<RepositoryUrl>https://github.com/Bitvantage/SharpTextFsm.git</RepositoryUrl>
   </PropertyGroup>
 
