@@ -123,7 +123,7 @@ If a type converter is not specified and the underlying type has a TryParse() or
 
 ### Setting an Explicit Type Converter
 ```csharp
-[Variable(TypeConverter = typeof(MyTypeConverter)]
+[Variable(Converter = typeof(MyTypeConverter)]
 public long ValueField { get; set; }
 ```
 ### Type Conversion Failure
@@ -209,7 +209,7 @@ When the TextFSM value definition has the 'List' option set, the underlying coll
 
 ### Setting Explicit Type Converters
 ```csharp
-[Variable(TypeConverter = typeof(ListCreator)]
+[Variable(Converter = typeof(ListCreator)]
 public string Value { get; set; }
 ```
 ### Custom List Creator
@@ -231,11 +231,11 @@ class CommaSeparatedList : ListCreator<string,string>
 | ReadOnlyCollectionCreator | Converts TestFSM lists to a read-only collection  |
 
 ### Transformers
-Before a value is converted and assigned, it can be transformed from one value to another using the TransformerAttribute.
+Before a value is converted and assigned, it can be transformed from one value to another using the ValueTransformerAttribute.
 ```csharp
-[Transformer("old value", "new value")] // "old value" -> "new value"
-[Transformer("-", null)]                // Value is not set if the string value is null
-[Transformer("*", "")]                  // Value is not set if SkipEmpty is true (default) or empty if SkipEmpty is false
+[ValueTransformer("old value", "new value")] // "old value" -> "new value"
+[ValueTransformer("-", null)]                // Value is not set if the string value is null
+[ValueTransformer("*", "")]                  // Value is not set if SkipEmpty is true (default) or empty if SkipEmpty is false
 public string Value { get; set; }
 ```
 
