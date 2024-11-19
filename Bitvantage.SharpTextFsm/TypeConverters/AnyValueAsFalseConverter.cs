@@ -25,8 +25,8 @@ namespace Bitvantage.SharpTextFsm.TypeConverters
     {
         public override bool TryConvert(string value, out bool convertedValue)
         {
-            convertedValue = !string.IsNullOrEmpty(value);
-            return false;
+            convertedValue = string.IsNullOrEmpty(value);
+            return true;
         }
     }
 }
